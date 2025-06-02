@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">スタートページ</title>
+    <style>
+        @media (max-width: 576px) {
+            .responsive-image {
+                width: 50%;  /* スマホでの表示サイズ */
+            }
+        }
+    </style>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <main>
+        <div class="container mt-5 mb-5 d-flex flex-column justify-content-center align-items-center">
+            <!-- ヘッダー -->
+            <h1 class="mb-4 text-center fw-bold text-primary">
+                <i class="bi bi-pc-display-horizontal"></i> PCMS スタートページ
+            </h1>
+
+            <!-- メインエリア -->
+            <div class="row justify-content-center">
+                <!-- ログインカード -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="card shadow-sm bg-light">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">ログイン</h5>
+                            <p class="text-muted">アカウントにログインして操作を開始します。</p>
+                            <a href="#" class="btn btn-primary btn-custom"><i class="bi bi-person-circle"></i> ログイン</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 予約状況一覧カード -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="card shadow-sm bg-light">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">予約状況一覧</h5>
+                            <p class="text-muted">現在の予約状況を確認します。</p>
+                            <a th:href="@{/reservationList}" class="btn btn-success btn-custom"><i class="bi bi-calendar-check"></i> 予約状況確認</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 予約カード -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="card shadow-sm bg-light">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">予約</h5>
+                            <p class="text-muted">新しい予約を作成します。</p>
+                            <a href="#" class="btn btn-warning btn-custom"><i class="bi bi-pencil-square"></i> 予約する</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 返却カード -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="card shadow-sm bg-light">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">PC返却</h5>
+                            <p class="text-muted">PCを返却する操作を行います。</p>
+                            <a href="#" class="btn btn-danger btn-custom"><i class="bi bi-arrow-return-left"></i> PC返却</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <img src="/img/T-4.jpg" alt="PCMS" class="mb-4 responsive-image">
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
