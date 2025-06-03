@@ -2,6 +2,11 @@ package com.pcms.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
+
+import java.io.Serializable;
 
 /**
  * ユーザー情報を表すモデルクラス。
@@ -11,7 +16,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class User {
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Component
+public class User implements Serializable {
+
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * ユーザーの一意な識別子（主キー）。
@@ -68,6 +78,10 @@ public class User {
         this.name = name;
         this.password = password;
         this.email = email;
+        this.role = role;
+    }
+
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+  <title layout:fragment="title">マイページ</title>
+</head>
+<body>
+
+
+<!-- メインコンテンツ -->
+<div layout:fragment="content">
+    <main>
+      <div class="container mt-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <!-- お知らせ -->
+          <div class="col">
+            <div class="card mb-4" role="region" aria-labelledby="newsHeader">
+              <div id="newsHeader" class="card-header bg-success text-white">
+                <i class="bi bi-megaphone-fill me-2"></i>お知らせ
+              </div>
+              <div class="card-body">
+                <p>管理者からのお知らせがここに表示されます。</p>
+                <div class="text-end">
+                  <a href="news.html" class="btn btn-success" title="管理者からのお知らせを見る">お知らせを見る</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 予約履歴 -->
+          <div class="col">
+            <div class="card mb-4" role="region" aria-labelledby="historyHeader">
+              <div id="historyHeader" class="card-header bg-primary text-white">
+                <i class="bi bi-clock-history me-2"></i>予約履歴
+              </div>
+              <div class="card-body">
+                <p>ここにPCの予約履歴が表示されます。</p>
+                <div class="text-end">
+                  <a href="history.html" class="btn btn-primary" title="予約履歴を見る">予約履歴を見る</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- パスワード変更 -->
+          <div class="col">
+            <div class="card mb-4" role="region" aria-labelledby="passwordHeader">
+              <div id="passwordHeader" class="card-header bg-warning text-white">
+                <i class="bi bi-pencil-square me-2"></i>パスワード変更
+              </div>
+              <div class="card-body">
+                <p>ここでパスワードを変更できます。</p>
+                <div class="text-end">
+                  <a th:href="@{/mypage/passwordChange}" class="btn btn-warning" title="パスワードを変更する">パスワードを変更する</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+</div>
+
+</body>
+</html>

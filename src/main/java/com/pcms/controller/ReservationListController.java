@@ -24,7 +24,7 @@ public class ReservationListController {
         }
         model.addAttribute("date", date);
         model.addAttribute("reservationMap", reservationService.getReservation(date));
-        return "reservationList";
+        return "public/reservationList";
     }
 
 }

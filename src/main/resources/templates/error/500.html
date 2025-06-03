@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+  <title layout:fragment="title">システムエラー</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <main class="container">
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">エラーが発生しました</h4>
+      <p th:text="${error}">エラーメッセージ</p>
+      <hr>
+      <p class="mb-0">
+        <a href="javascript:history.back()" class="btn btn-secondary">前のページに戻る</a>
+      </p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -3,12 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
     <title layout:fragment="title">スタートページ</title>
     <style>
         @media (max-width: 576px) {
             .responsive-image {
-                width: 50%;  /* スマホでの表示サイズ */
+                width: 50%;
             }
         }
     </style>
@@ -31,7 +30,7 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">ログイン</h5>
                             <p class="text-muted">アカウントにログインして操作を開始します。</p>
-                            <a href="#" class="btn btn-primary btn-custom"><i class="bi bi-person-circle"></i> ログイン</a>
+                            <a th:href="@{/login}" class="btn btn-primary btn-custom"><i class="bi bi-person-circle"></i> ログイン</a>
                         </div>
                     </div>
                 </div>
@@ -42,7 +41,7 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">予約状況一覧</h5>
                             <p class="text-muted">現在の予約状況を確認します。</p>
-                            <a th:href="@{/reservationList}" class="btn btn-success btn-custom"><i class="bi bi-calendar-check"></i> 予約状況確認</a>
+                            <a th:href="@{/reservationList}"  class="btn btn-success btn-custom"><i class="bi bi-calendar-check"></i> 予約状況確認</a>
                         </div>
                     </div>
                 </div>
