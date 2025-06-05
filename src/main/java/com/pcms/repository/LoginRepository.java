@@ -1,9 +1,7 @@
 package com.pcms.repository;
 
 import com.pcms.model.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Optional;
 
@@ -15,10 +13,11 @@ public interface LoginRepository {
             *
         FROM user
         WHERE
-            email = #{emailAddress}
-            AND
-            password = SHA256(#{password}, 256)
+            LOWER(email) = LOWER(#{email})
     """)
-    Optional<User> login(@Param("emailAddress") String emailAddress, @Param("password") String password);
+    @Results({
+            @Result(property = "role", column = "role", typeHandler = com.pcms.handler.UserRoleTypeHandler.class)
+    })
+    Optional<User> findByEmail(@Param("email") String emailAddress);
 
 }

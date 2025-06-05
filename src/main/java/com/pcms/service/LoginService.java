@@ -13,8 +13,8 @@ public class LoginService {
 
     private final LoginRepository loginRepository;
 
-    public Optional<User> login(String emailAddress, String password) {
-        return loginRepository.login(emailAddress, password);
+    public Optional<User> findByEmail(String mail) {
+        return loginRepository.findByEmail(mail);
     }
 
 }
