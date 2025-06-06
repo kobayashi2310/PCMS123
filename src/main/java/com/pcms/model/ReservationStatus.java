@@ -14,11 +14,6 @@ public enum ReservationStatus {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
-
     public static ReservationStatus fromString(String value) {
         for (ReservationStatus status : ReservationStatus.values()) {
             if (status.value.toLowerCase().equals(value)) {
@@ -26,5 +21,10 @@ public enum ReservationStatus {
             }
         }
         throw new IllegalArgumentException("No matching constant for [" + value + "]");
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

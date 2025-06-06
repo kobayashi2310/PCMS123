@@ -5,14 +5,16 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Returned {
     private int returned_id;
     private int reservation_id;
     private LocalDateTime returned_time;
     private String comment;
 
-    public Returned() {}
+    public Returned() {
+    }
 
     public Returned(int returned_id, int reservation_id, LocalDateTime returned_time, String comment) {
         this.returned_id = returned_id;

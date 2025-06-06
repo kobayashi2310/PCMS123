@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const dateInput = document.getElementById('date');
     const today = new Date();
     const year = today.getFullYear();
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dateInput.setAttribute('min', todayFormatted);
 
-    dateInput.addEventListener('input', function() {
+    dateInput.addEventListener('input', function () {
         const selectedDate = new Date(this.value);
         const todayDate = new Date(todayFormatted);
 

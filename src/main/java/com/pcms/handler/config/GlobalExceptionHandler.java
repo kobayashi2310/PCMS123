@@ -1,4 +1,4 @@
-package com.pcms.handler;
+package com.pcms.handler.config;
 
 import com.pcms.controller.LoginController;
 import org.springframework.http.HttpStatus;

@@ -10,4 +10,5 @@ public record ReservationListBuilder(
         LocalDate date,
         LocalTime start_time,
         LocalTime end_time
-) { }
+) {
+}

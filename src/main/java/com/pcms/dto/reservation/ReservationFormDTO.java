@@ -9,4 +9,5 @@ public record ReservationFormDTO(
         Pc pc,
         List<ReservationPeriodDTO> reservationPeriods,
         LocalDate localDate
-) { }
+) {
+}

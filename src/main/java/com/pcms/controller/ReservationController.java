@@ -17,7 +17,6 @@ public class ReservationController {
             Model model) {
 
 
-
         return "protected/reservation";
     }
 

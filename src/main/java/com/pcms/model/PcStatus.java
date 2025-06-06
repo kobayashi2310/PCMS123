@@ -5,17 +5,13 @@ import lombok.Getter;
 @Getter
 public enum PcStatus {
     AVAILABLE("available"),
-    MAINTENANCE("maintenance");
+    MAINTENANCE("maintenance"),
+    EXCLUSIVE_USE("exclusive_use");
 
     private final String value;
 
     PcStatus(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
     }
 
     public static PcStatus fromString(String value) {
@@ -25,5 +21,10 @@ public enum PcStatus {
             }
         }
         throw new IllegalArgumentException("No matching constant for [" + value + "]");
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
