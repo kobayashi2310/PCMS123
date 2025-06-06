@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja"
+      layout:decorate="~{layout/layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{layout/layout}">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title layout:fragment="title">スタートページ</title>
     <style>
+        .responsive-icon {
+            height: 250px;
+            width: auto;
+        }
+
         @media (max-width: 576px) {
-            .responsive-image {
-                width: 50%;
+            .responsive-icon {
+                height: 80px;
             }
         }
     </style>
@@ -17,12 +22,20 @@
 <body>
 <div layout:fragment="content">
     <main>
-        <div class="container mt-5 mb-5 d-flex flex-column justify-content-center align-items-center" style="display: inline;">
-            <!-- ヘッダー -->
-            <h1 class="mb-4 text-center fw-bold text-primary">
-                <i class="bi bi-pc-display-horizontal"></i> PCMS スタートページ
-                <img th:src="@{/img/T-2.png}" alt="icon" style="height: 250px; width: 130px;" />
-            </h1>
+        <div class="container mt-5 mb-5 d-flex flex-column justify-content-center align-items-center"
+             style="display: inline;">
+
+            <div class="d-flex align-items-center justify-content-center flex-wrap text-center mb-4">
+                <h1 class="fw-bold text-primary me-3 mb-0">
+                    <i class="bi bi-pc-display-horizontal"></i> PCMS スタートページ
+                </h1>
+                <img alt="icon" th:src="@{/img/T-2.png}" class="responsive-icon">
+            </div>
+
+            <div th:if="${logoutMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${logoutMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
             <!-- メインエリア -->
             <div class="row justify-content-center">
@@ -32,7 +45,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">ログイン</h5>
                             <p class="text-muted">アカウントにログインして操作を開始します。</p>
-                            <a th:href="@{/login}" class="btn btn-primary btn-custom"><i class="bi bi-person-circle"></i> ログイン</a>
+                            <a class="btn btn-primary btn-custom" th:href="@{/login}"><i
+                                    class="bi bi-person-circle"></i> ログイン</a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +57,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">予約状況一覧</h5>
                             <p class="text-muted">現在の予約状況を確認します。</p>
-                            <a th:href="@{/reservationList}"  class="btn btn-success btn-custom"><i class="bi bi-calendar-check"></i> 予約状況確認</a>
+                            <a class="btn btn-success btn-custom" th:href="@{/reservationList}"><i
+                                    class="bi bi-calendar-check"></i> 予約状況確認</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +69,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">予約</h5>
                             <p class="text-muted">新しい予約を作成します。</p>
-                            <a th:href="@{/reservation}" class="btn btn-warning btn-custom"><i class="bi bi-pencil-square"></i> 予約する</a>
+                            <a class="btn btn-warning btn-custom" th:href="@{/reservation}"><i
+                                    class="bi bi-pencil-square"></i> 予約する</a>
                         </div>
                     </div>
                 </div>
@@ -65,7 +81,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">PC返却</h5>
                             <p class="text-muted">PCを返却する操作を行います。</p>
-                            <a th:href="@{/mypage/return}" class="btn btn-danger btn-custom"><i class="bi bi-arrow-return-left"></i> PC返却</a>
+                            <a class="btn btn-danger btn-custom" th:href="@{/mypage/return}"><i
+                                    class="bi bi-arrow-return-left"></i> PC返却</a>
                         </div>
                     </div>
                 </div>
@@ -76,8 +93,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">ログアウト</h5>
                             <p class="text-muted">アカウントからログアウトします。</p>
-                            <form th:action="@{/logout}" method="post">
-                                <button type="submit" class="btn btn-secondary btn-custom">
+                            <form method="post" th:action="@{/logout}">
+                                <button class="btn btn-secondary btn-custom" type="submit">
                                     <i class="bi bi-box-arrow-right"></i> ログアウト
                                 </button>
                             </form>
@@ -86,7 +103,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <img src="/img/T-4.jpg" alt="PCMS" class="mb-4 responsive-image">
+                    <img alt="PCMS" src="/img/T-4.jpg" class="img-fluid mb-4" style="max-width: 600px; width: 100%;">
                 </div>
             </div>
         </div>

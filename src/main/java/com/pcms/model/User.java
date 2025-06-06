@@ -56,7 +56,8 @@ public class User implements Serializable {
     /**
      * デフォルトコンストラクタ。
      */
-    public User() {}
+    public User() {
+    }
 
     public User(int user_id, String number, String name, String password, String email, String role) {
         this(user_id, number, name, password, email, UserRole.fromString(role));
@@ -65,12 +66,12 @@ public class User implements Serializable {
     /**
      * すべてのフィールドを指定するコンストラクタ。
      *
-     * @param user_id ユーザーID
-     * @param number 学籍番号または職員番号
-     * @param name 氏名
+     * @param user_id  ユーザーID
+     * @param number   学籍番号または職員番号
+     * @param name     氏名
      * @param password ハッシュ化されたパスワード
-     * @param email メールアドレス
-     * @param role ユーザーの役割（生徒または教師）
+     * @param email    メールアドレス
+     * @param role     ユーザーの役割（生徒または教師）
      */
     public User(int user_id, String number, String name, String password, String email, UserRole role) {
         this.user_id = user_id;

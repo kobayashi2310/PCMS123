@@ -1,17 +1,12 @@
 package com.pcms.controller;
 
-import com.pcms.model.User;
-import com.pcms.service.LoginService;
 import groovy.util.logging.Slf4j;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.regex.Pattern;
 
 @Slf4j
 @Controller
@@ -19,11 +14,20 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final User sessionUser;
-    private final LoginService loginService;
-
     @GetMapping
-    public String showLogin() {
+    public String showLoginPage(HttpSession session, Model model) {
+        String loginEmail = (String) session.getAttribute("LOGIN_EMAIL");
+        String loginError = (String) session.getAttribute("LOGIN_ERROR");
+
+        if (loginEmail != null) {
+            model.addAttribute("loginEmail", loginEmail);
+            session.removeAttribute("LOGIN_EMAIL");
+        }
+        if (loginError != null) {
+            model.addAttribute("loginError", loginError);
+            session.removeAttribute("LOGIN_ERROR");
+        }
+
         return "public/login";
     }
 

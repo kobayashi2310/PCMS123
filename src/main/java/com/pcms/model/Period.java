@@ -5,13 +5,15 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Period {
     private byte period_number;
     private LocalTime start_time;
     private LocalTime end_time;
 
-    public Period() {}
+    public Period() {
+    }
 
     public Period(byte period_number, LocalTime startTime, LocalTime endTime) {
         this.period_number = period_number;

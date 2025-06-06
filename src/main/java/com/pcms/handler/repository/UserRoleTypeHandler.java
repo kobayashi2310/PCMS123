@@ -1,10 +1,13 @@
-package com.pcms.handler;
+package com.pcms.handler.repository;
 
 import com.pcms.model.UserRole;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserRoleTypeHandler extends BaseTypeHandler<UserRole> {
 

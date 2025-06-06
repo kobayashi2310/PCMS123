@@ -6,7 +6,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Reservation {
     private int reservation_id;
     private int user_id;
@@ -19,7 +20,8 @@ public class Reservation {
     private int approver;
     private LocalDateTime approved_time;
 
-    public Reservation() {}
+    public Reservation() {
+    }
 
     public Reservation(int reservation_id, int user_id,
                        int pc_id, LocalDate date, byte period_number,

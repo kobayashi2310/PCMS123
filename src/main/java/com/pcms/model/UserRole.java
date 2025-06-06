@@ -37,16 +37,6 @@ public enum UserRole {
     }
 
     /**
-     * 列挙値を対応する文字列として返す。
-     *
-     * @return 文字列形式のユーザー役割（例: "student", "teacher"）
-     */
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    /**
      * 文字列から対応する {@code UserRole} を取得する。
      *
      * @param value "student" または "teacher" に一致する文字列
@@ -60,5 +50,15 @@ public enum UserRole {
             }
         }
         throw new IllegalArgumentException("No matching constant for [" + value + "]");
+    }
+
+    /**
+     * 列挙値を対応する文字列として返す。
+     *
+     * @return 文字列形式のユーザー役割（例: "student", "teacher"）
+     */
+    @Override
+    public String toString() {
+        return value;
     }
 }

@@ -1,4 +1,4 @@
-package com.pcms.handler;
+package com.pcms.handler.config;
 
 import com.pcms.controller.LoginController;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView();
         mav.addObject("error", e.getMessage());
         mav.addObject("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        mav.setViewName("error/500");  // error.htmlのパス
+        mav.setViewName("error");  // error.htmlのパス
         mav.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return mav;
     }
