@@ -35,6 +35,8 @@ public class SecurityConfig {
                         .passwordParameter("password")
                         .defaultSuccessUrl("/mypage", true)
                         .successHandler((req, res, auth) -> {
+                            String email = auth.getName();
+                            req.getSession().setAttribute("LOGIN_EMAIL", email);
                             req.getSession().setAttribute("loginMessage", "ログインに成功しました");
                             res.sendRedirect("/mypage");
                         })
@@ -55,8 +57,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new MessageDigestPasswordEncoder("SHA-256");
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new MessageDigestPasswordEncoder("SHA-256");
+//    }
 }

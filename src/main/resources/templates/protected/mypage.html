@@ -17,6 +17,10 @@
                 <span th:text="${loginMessage}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+            <div class="container mt-3">
+                <div th:if="${message}" class="alert alert-success alert-dismissible fade show" th:text="${message}"></div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <!-- お知らせ -->

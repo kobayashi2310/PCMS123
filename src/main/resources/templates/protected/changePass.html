@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <title layout:fragment="title">パスワード変更</title>
+</head>
+<body>
+
+
+<div layout:fragment="content">
+  <!-- メインコンテンツ -->
+  <main>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">パスワード変更</h1>
+      <div class="container mt-3">
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+      </div>
+
+      <form th:action="@{/mypage/passwordChange}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div class="mb-3">
+          <label for="currentPassword" class="form-label">現在のパスワード</label>
+          <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="現在のパスワードを入力してください">
+        </div>
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">新しいパスワード</label>
+          <div class="input-group">
+            <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="新しいパスワードを入力してください">
+            <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">表示</button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">新しいパスワード（確認用）</label>
+          <div class="input-group">
+            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="新しいパスワードを再入力してください">
+            <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">表示</button>
+          </div>
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">変更する</button>
+        </div>
+      </form>
+      <div class="mt-4 text-end">
+        <a th:href="@{/mypage}" class="btn btn-secondary">マイページに戻る</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<script>
+  document.getElementById('toggleNewPassword').addEventListener('click', function () {
+    const newPasswordInput = document.getElementById('newPassword');
+    const type = newPasswordInput.type === 'password' ? 'text' : 'password';
+    newPasswordInput.type = type;
+    this.textContent = type === 'password' ? '表示' : '非表示';
+  });
+
+  document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+    confirmPasswordInput.type = type;
+    this.textContent = type === 'password' ? '表示' : '非表示';
+  });
+</script>
+
+</body>
+</html>

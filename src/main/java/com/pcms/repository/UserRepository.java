@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.Optional;
 
 @Mapper
-public interface LoginRepository {
+public interface UserRepository {
 
     @Select("""
                 SELECT
@@ -20,5 +20,12 @@ public interface LoginRepository {
             @Result(property = "role", column = "role", typeHandler = UserRoleTypeHandler.class)
     })
     Optional<User> findByEmail(@Param("email") String emailAddress);
+
+    @Update("""
+        UPDATE user
+        SET password = #{password}
+        WHERE email = #{email}
+    """)
+    int changePassword(@Param("email") String emailAddress, @Param("password") String password);
 
 }
