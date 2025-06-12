@@ -19,8 +19,12 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         String email = request.getParameter("email");
         request.getSession().setAttribute("LOGIN_EMAIL", email);
-        request.getSession().setAttribute("LOGIN_ERROR", "メールアドレスまたはパスワードが正しくありません。");
-
+        String password = request.getParameter("password");
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            request.getSession().setAttribute("LOGIN_ERROR", "メールアドレスまたはパスワードが入力されていません。");
+        } else {
+            request.getSession().setAttribute("LOGIN_ERROR", "メールアドレスまたはパスワードが正しくありません。");
+        }
         response.sendRedirect("/login?error");
     }
 }
