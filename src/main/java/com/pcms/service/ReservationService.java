@@ -36,7 +36,6 @@ public class ReservationService {
     public Map<Integer, ReservationListDTO> getReservation(LocalDate date) {
         List<ReservationListBuilder> list = reservationRepository.findByDate(date.toString());
 
-        // PCごとにグループ化して予約状況を解析
         return list.stream()
                 .collect(Collectors.groupingBy(
                         ReservationListBuilder::pc_id,
@@ -45,24 +44,64 @@ public class ReservationService {
                                 builders -> {
                                     var firstBuilder = builders.getFirst();
 
-                                    if (PcStatus.MAINTENANCE.toString().equals(firstBuilder.pc_status())) {
+                                    if (PcStatus.MAINTENANCE.getValue().equals(firstBuilder.pc_status())) {
                                         return new ReservationListDTO(
                                                 firstBuilder.pc_id(),
                                                 firstBuilder.pc_name(),
+                                                null,
                                                 ReservationListStatus.NOT_AVAILABLE
                                         );
                                     }
 
                                     ReservationListStatus status = determineStatus(builders);
 
+                                    List<String> situation = builders.stream()
+                                            .filter(b -> b.period_number() != null && b.name() != null)
+                                            .map(b -> b.period_number() + "限:" + b.name())
+                                            .toList();
+
                                     return new ReservationListDTO(
                                             firstBuilder.pc_id(),
                                             firstBuilder.pc_name(),
+                                            situation.isEmpty() ? null : situation,
                                             status
                                     );
                                 }
                         )
                 ));
+
+         // PCごとにグループ化して予約状況を解析
+//        return list.stream()
+//                .collect(Collectors.groupingBy(
+//                        ReservationListBuilder::pc_id,
+//                        Collectors.collectingAndThen(
+//                                Collectors.toList(),
+//                                builders -> {
+//                                    var firstBuilder = builders.getFirst();
+//
+//                                    if (PcStatus.MAINTENANCE.toString().equals(firstBuilder.pc_status())) {
+//                                        return new ReservationListDTO(
+//                                                firstBuilder.pc_id(),
+//                                                firstBuilder.pc_name(),
+//                                                null,
+//                                                ReservationListStatus.NOT_AVAILABLE
+//                                        );
+//                                    }
+//
+//                                    ReservationListStatus status = determineStatus(builders);
+//
+//                                    return new ReservationListDTO(
+//                                            firstBuilder.pc_id(),
+//                                            firstBuilder.pc_name(),
+//                                            firstBuilder.period_number() != null
+//                                                    ? firstBuilder.period_number() + "限:" + firstBuilder.name()
+//                                                    : null,
+//                                            status
+//                                    );
+//                                }
+//                        )
+//                ));
+
     }
 
     /**

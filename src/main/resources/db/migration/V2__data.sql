@@ -1,6 +1,6 @@
 INSERT INTO period VALUES (1, '09:00', '10:30');
 INSERT INTO period VALUES (2, '10:40', '12:10');
-INSERT INTO period VALUES (3, '13:00', '14:00');
+INSERT INTO period VALUES (3, '13:00', '14:30');
 INSERT INTO period VALUES (4, '14:40', '16:10');
 INSERT INTO period VALUES (5, '16:20', '17:50');
 INSERT INTO period VALUES (99, '00:00', '23:59');

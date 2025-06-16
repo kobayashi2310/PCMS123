@@ -8,6 +8,8 @@ public record ReservationListBuilder(
         String pc_name,
         String pc_status,
         LocalDate date,
+        String name,
+        Byte period_number,
         LocalTime start_time,
         LocalTime end_time
 ) {

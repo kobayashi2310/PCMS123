@@ -53,12 +53,13 @@
                     <tr>
                         <th>PC名</th>
                         <th>状態</th>
+                        <th>状況</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="entry : ${reservationMap}">
-                        <td th:text="${entry.value.pc_name()}"></td>
+                        <td th:text="${entry.value.pc_name}"></td>
                         <td>
                             <span class="badge" style="font-size: 1.5rem;" th:classappend="${
                                 entry.value.status().name() == 'CURRENTLY_IN_USE' ? 'bg-danger' :
@@ -67,6 +68,12 @@
                                 entry.value.status().name() == 'NOT_AVAILABLE' ? 'bg-secondary' :
                                 entry.value.status().name() == 'NO_VACANCIES' ? 'bg-secondary' : ''
                             }" th:text="${entry.value.status().value}">状態</span>
+                        </td>
+                        <td>
+                            <div th:if="${entry.value.situation != null and !#lists.isEmpty(entry.value.situation)}">
+                                <p th:each="situation : ${entry.value.situation}"
+                                    th:text="${situation}" ></p>
+                            </div>
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm"

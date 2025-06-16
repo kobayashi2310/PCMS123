@@ -10,9 +10,6 @@
 <div layout:fragment="content">
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-body">
                         <h3 class="card-title text-center mb-4">ログイン</h3>
                         <form method="post" th:action="@{/login}">
                             <div th:if="${loginError}" class="text-danger mb-3">
@@ -21,14 +18,17 @@
 
                             <div class="mb-3">
                                 <label class="form-label" for="email">メールアドレス</label>
-                                <input class="form-control" id="email" name="email"
-                                       placeholder="メールアドレスを入力"
-                                       required th:value="${loginEmail}" type="email">
+                                <input type="email" class="form-control form-control-lg py-3"
+                                       id="email" name="email" placeholder="メールアドレスを入力"
+                                       aria-describedby="emailHelp" th:value="${loginEmail}"
+                                       style="font-size: 1.2rem; height: 25px;" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="password">パスワード</label>
-                                <input class="form-control" id="password" name="password" placeholder="パスワードを入力"
-                                       required type="password">
+                                <input type="password" class="form-control form-control-lg py-3"
+                                       id="password" name="password" placeholder="パスワードを入力"
+                                       style="font-size: 1.2rem; height: 25px;"
+                                        required >
                             </div>
                             <div class="form-check mt-2 mb-2">
                                 <input class="form-check-input" id="showPassword" type="checkbox">
@@ -40,8 +40,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
