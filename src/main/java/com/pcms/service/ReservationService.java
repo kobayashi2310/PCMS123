@@ -4,7 +4,8 @@ import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.dto.reservationList.ReservationListDTO;
 import com.pcms.dto.reservationList.ReservationListStatus;
 import com.pcms.model.PcStatus;
-import com.pcms.repository.ReservationRepository;
+import com.pcms.mapper.ReservationMapper;
+import com.pcms.model.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationMapper reservationRepository;
 
     /**
      * 指定された日付のPC予約状況を取得します。
@@ -33,7 +34,7 @@ public class ReservationService {
      * @param date 予約状況を確認する日付
      * @return PC_IDをキーとし、各PCの予約状況をマッピングしたMap
      */
-    public Map<Integer, ReservationListDTO> getReservation(LocalDate date) {
+    public Map<Integer, ReservationListDTO> getReservationList(LocalDate date) {
         List<ReservationListBuilder> list = reservationRepository.findByDate(date.toString());
 
         return list.stream()
@@ -69,38 +70,11 @@ public class ReservationService {
                                 }
                         )
                 ));
+    }
 
-         // PCごとにグループ化して予約状況を解析
-//        return list.stream()
-//                .collect(Collectors.groupingBy(
-//                        ReservationListBuilder::pc_id,
-//                        Collectors.collectingAndThen(
-//                                Collectors.toList(),
-//                                builders -> {
-//                                    var firstBuilder = builders.getFirst();
-//
-//                                    if (PcStatus.MAINTENANCE.toString().equals(firstBuilder.pc_status())) {
-//                                        return new ReservationListDTO(
-//                                                firstBuilder.pc_id(),
-//                                                firstBuilder.pc_name(),
-//                                                null,
-//                                                ReservationListStatus.NOT_AVAILABLE
-//                                        );
-//                                    }
-//
-//                                    ReservationListStatus status = determineStatus(builders);
-//
-//                                    return new ReservationListDTO(
-//                                            firstBuilder.pc_id(),
-//                                            firstBuilder.pc_name(),
-//                                            firstBuilder.period_number() != null
-//                                                    ? firstBuilder.period_number() + "限:" + firstBuilder.name()
-//                                                    : null,
-//                                            status
-//                                    );
-//                                }
-//                        )
-//                ));
+    public List<Reservation> getReservation(String pc_id, LocalDate date) {
+
+        return reservationRepository.findByIdAndDate(pc_id, date.toString());
 
     }
 

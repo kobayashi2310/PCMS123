@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,12 +19,13 @@ public class ReservationListController {
     private final ReservationService reservationService;
 
     @GetMapping
+    @PostMapping
     public String reservationList(Model model, @RequestParam(required = false) LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
         model.addAttribute("date", date);
-        model.addAttribute("reservationMap", reservationService.getReservation(date));
+        model.addAttribute("reservationMap", reservationService.getReservationList(date));
         return "public/reservationList";
     }
 

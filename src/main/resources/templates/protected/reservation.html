@@ -7,72 +7,73 @@
 </head>
 <body>
 
-<main>
-    <div class="container mt-5" style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
-        <h1 class="text-center mb-4">PC予約</h1>
-        <!-- 予約可能日程 -->
-        <div class="mb-4">
-            <h3>予約可能日程</h3>
-            <ul>
-                <li>2025-05-15 ~ 2025-05-20</li>
-                <li>2025-05-22 ~ 2025-05-25</li>
-            </ul>
+<div layout:fragment="content">
+    <main>
+        <div class="container mt-5" style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
+            <h1 class="text-center mb-4">PC予約</h1>
+            <!-- 予約可能日程 -->
+            <div class="mb-4">
+                <h3>予約可能日程</h3>
+                <ul>
+                    <li>2025-05-15 ~ 2025-05-20</li>
+                    <li>2025-05-22 ~ 2025-05-25</li>
+                </ul>
+            </div>
+
+            <!-- 予約フォーム -->
+            <form action="checkreservation.html" id="reservationForm" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="startDateTime">利用日時</label>
+                    <input class="form-control" id="startDateTime" name="startDateTime" type="datetime-local">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="endDateTime">返却予定日時</label>
+                    <input class="form-control" id="endDateTime" name="endDateTime" type="datetime-local">
+                    <div class="form-text text-danger d-none" id="dateWarning">利用可能日程を超えています。</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">授業時間のみ利用</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="period1" name="periods" type="checkbox" value="1限">
+                        <label class="form-check-label" for="period1">1限</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="period2" name="periods" type="checkbox" value="2限">
+                        <label class="form-check-label" for="period2">2限</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="period3" name="periods" type="checkbox" value="3限">
+                        <label class="form-check-label" for="period3">3限</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="period4" name="periods" type="checkbox" value="4限">
+                        <label class="form-check-label" for="period4">4限</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="period5" name="periods" type="checkbox" value="5限">
+                        <label class="form-check-label" for="period5">5限</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="purpose">利用目的</label>
+                    <select class="form-select" id="purpose" name="purpose">
+                        <option value="授業">授業</option>
+                        <option value="課題">タコス</option>
+                        <option value="研究">タコス</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </div>
+                <div class="mb-3 d-none" id="otherPurposeBox">
+                    <label class="form-label" for="otherPurpose">その他の理由</label>
+                    <textarea class="form-control" id="otherPurpose" name="otherPurpose" rows="10"></textarea>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-primary" type="submit">確認画面へ</button>
+                </div>
+            </form>
+            <script th:src="@{/js/reservation.js}"></script>
         </div>
-
-        <!-- 予約フォーム -->
-        <form action="checkreservation.html" id="reservationForm" method="post">
-            <div class="mb-3">
-                <label class="form-label" for="startDateTime">利用日時</label>
-                <input class="form-control" id="startDateTime" name="startDateTime" type="datetime-local">
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="endDateTime">返却予定日時</label>
-                <input class="form-control" id="endDateTime" name="endDateTime" type="datetime-local">
-                <div class="form-text text-danger d-none" id="dateWarning">利用可能日程を超えています。</div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">授業時間のみ利用</label><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="period1" name="periods" type="checkbox" value="1限">
-                    <label class="form-check-label" for="period1">1限</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="period2" name="periods" type="checkbox" value="2限">
-                    <label class="form-check-label" for="period2">2限</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="period3" name="periods" type="checkbox" value="3限">
-                    <label class="form-check-label" for="period3">3限</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="period4" name="periods" type="checkbox" value="4限">
-                    <label class="form-check-label" for="period4">4限</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="period5" name="periods" type="checkbox" value="5限">
-                    <label class="form-check-label" for="period5">5限</label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="purpose">利用目的</label>
-                <select class="form-select" id="purpose" name="purpose">
-                    <option value="授業">授業</option>
-                    <option value="課題">タコス</option>
-                    <option value="研究">タコス</option>
-                    <option value="その他">その他</option>
-                </select>
-            </div>
-            <div class="mb-3 d-none" id="otherPurposeBox">
-                <label class="form-label" for="otherPurpose">その他の理由</label>
-                <textarea class="form-control" id="otherPurpose" name="otherPurpose" rows="10"></textarea>
-            </div>
-            <div class="text-end">
-                <button class="btn btn-primary" type="submit">確認画面へ</button>
-            </div>
-        </form>
-        <script th:src="@{/js/reservation.js}"></script>
-    </div>
-</main>
-
+    </main>
+</div>
 </body>
 </html>

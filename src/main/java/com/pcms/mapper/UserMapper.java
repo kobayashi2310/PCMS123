@@ -1,4 +1,4 @@
-package com.pcms.repository;
+package com.pcms.mapper;
 
 import com.pcms.handler.repository.UserRoleTypeHandler;
 import com.pcms.model.User;
@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.Optional;
 
 @Mapper
-public interface UserRepository {
+public interface UserMapper {
 
     @Select("""
                 SELECT

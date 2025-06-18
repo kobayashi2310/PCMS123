@@ -1,6 +1,7 @@
-package com.pcms.repository;
+package com.pcms.mapper;
 
 import com.pcms.dto.reservationList.ReservationListBuilder;
+import com.pcms.model.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -8,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface ReservationRepository {
+public interface ReservationMapper {
 
     @Select("""
                 SELECT
@@ -30,5 +31,14 @@ public interface ReservationRepository {
                 ORDER BY pc.pc_id, period_number;
             """)
     List<ReservationListBuilder> findByDate(@Param("date") String date);
+
+    @Select("""
+        SELECT
+            *
+        FROM reservation
+        WHERE
+            pc_id = #{pc_id}
+    """)
+    List<Reservation> findByIdAndDate(@Param("pc_id") String pc_id, @Param("date") String date);
 
 }

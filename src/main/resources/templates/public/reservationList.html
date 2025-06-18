@@ -27,27 +27,27 @@
     <main style="margin-bottom: 100px;">
         <div class="container mt-5">
             <h2 class="mb-4">🖥 ノートPC貸出状況一覧</h2>
-            <!-- 日付選択フォーム -->
-            <div class="card mb-4">
-                <div class="card-header bg-light text-black fw-bold">
-                    表示日付を選択
-                </div>
-                <div class="card-body">
-                    <form action="#" class="row g-3" method="GET">
-                        <div class="col-12 col-md-4">
-                            <label class="form-label" for="date">日付:</label>
-                            <input class="form-control" id="date" name="date" th:value="${date}" type="date">
-                        </div>
-                        <div class="col-12 col-md-2 align-self-end">
-                            <button class="btn btn-primary w-100 mt-2 mt-md-0" type="submit">表示</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
             <!-- 貸出状況テーブル -->
             <div class="table-responsive">
+
+                <!-- 日付選択フォーム -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light text-black fw-bold">
+                        表示日付を選択
+                    </div>
+                    <div class="card-body">
+                        <form action="#" class="row g-3" method="GET">
+                            <div class="col-12 col-md-4">
+                                <label class="form-label" for="date">日付:</label>
+                                <input class="form-control" id="date" name="date" th:value="${date}" type="date">
+                            </div>
+                            <div class="col-12 col-md-2 align-self-end">
+                                <button class="btn btn-primary w-100 mt-2 mt-md-0" type="submit">表示</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <table class="table table-bordered table-hover text-center pc-status-table mx-auto">
                     <thead class="table-dark">
                     <tr>
@@ -78,7 +78,7 @@
                         <td>
                             <a class="btn btn-primary btn-sm"
 
-                               th:href="@{/reservation/(pc_id=${entry.key})}"
+                               th:href="@{/reservation(pc_id=${entry.key}, date=${date})}"
                                th:if="${entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ||
                                entry.value.status().name() == 'RESERVATION_AVAILABLE' ||
                                entry.value.status().name() == 'CURRENTLY_IN_USE'}">予約する</a>

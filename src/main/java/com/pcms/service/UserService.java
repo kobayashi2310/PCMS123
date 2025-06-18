@@ -1,7 +1,7 @@
 package com.pcms.service;
 
 import com.pcms.model.User;
-import com.pcms.repository.UserRepository;
+import com.pcms.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Optional<User> findByEmail(String mail) {
