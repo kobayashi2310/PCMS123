@@ -1,41 +1,43 @@
 package com.pcms.service;
 
+import com.pcms.dto.reservation.PcDTO;
+import com.pcms.dto.reservation.ReservationDTO;
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.dto.reservationList.ReservationListDTO;
 import com.pcms.dto.reservationList.ReservationListStatus;
-import com.pcms.model.PcStatus;
+import com.pcms.mapper.PcMapper;
 import com.pcms.mapper.ReservationMapper;
-import com.pcms.model.Reservation;
+import com.pcms.model.PcStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * PCの予約状況を管理するサービスクラスです。
- * このクラスは以下の機能を提供します：
- * - 指定された日付のPC予約状況の取得
- * - PCの利用可能状態の判定
- * - 予約状況に基づくPCのステータス管理
+ * PC予約に関するサービスクラス。
+ * 予約情報の取得、予約可能状態の判定などを行う。
  */
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationMapper reservationRepository;
+    private final ReservationMapper reservationMapper;
+    private final PcMapper pcMapper;
 
     /**
-     * 指定された日付のPC予約状況を取得します。
+     * 指定された日付の全PCの予約状況を取得する。
      *
-     * @param date 予約状況を確認する日付
-     * @return PC_IDをキーとし、各PCの予約状況をマッピングしたMap
+     * @param date 確認対象の日付
+     * @return PCのIDをキーとした予約情報のマップ
      */
     public Map<Integer, ReservationListDTO> getReservationList(LocalDate date) {
-        List<ReservationListBuilder> list = reservationRepository.findByDate(date.toString());
+        List<ReservationListBuilder> list = reservationMapper.findByDate(date.toString());
 
         return list.stream()
                 .collect(Collectors.groupingBy(
@@ -72,44 +74,52 @@ public class ReservationService {
                 ));
     }
 
-    public List<Reservation> getReservation(String pc_id, LocalDate date) {
+    /**
+     * 特定のPCに対する指定日付の予約状況と、PC一覧を取得する。
+     *
+     * @param pc_id 確認対象のPC ID
+     * @param date  確認対象の日付
+     * @return ReservationDTO オブジェクト（PC一覧・日付・各時限の空き状況）
+     */
+    public ReservationDTO getReservation(String pc_id, LocalDate date) {
+        var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
+        var pcDTOList = pcMapper.findByReservation().stream()
+                .map(p -> new PcDTO(p.getPc_id(), p.getName()))
+                .toList();
 
-        return reservationRepository.findByIdAndDate(pc_id, date.toString());
+        var boolList = new ArrayList<>(Collections.nCopies(5, true));
+        reservationList.forEach(r -> boolList.set(r.getPeriod_number() - 1, false));
 
+        return new ReservationDTO(pcDTOList, date, boolList);
     }
 
     /**
-     * PCの予約状況から現在の状態を判定します。
+     * PCの予約データに基づき、現在のステータス（使用中・予約可など）を判定する。
      *
-     * @param builders 特定のPCの予約情報リスト
-     * @return PCの現在の状態
+     * @param builders 特定PCに関する予約データ一覧
+     * @return ReservationListStatus 判定されたステータス
      */
     private ReservationListStatus determineStatus(List<ReservationListBuilder> builders) {
-        // 予約の有無をチェック
         boolean hasReservations = builders.stream()
                 .anyMatch(b -> b.date() != null);
 
-        // 予約が1件もない場合は予約可能
         if (!hasReservations) {
             return ReservationListStatus.AVAILABLE_FOR_RESERVATION;
         }
 
-        // システム日時を取得
         LocalTime currentTime = LocalTime.now();
         LocalDate today = LocalDate.now();
 
-        // 現在使用中かどうかをチェック
         boolean isCurrentlyInUse = builders.stream()
                 .anyMatch(b -> b.date() != null &&
-                        today.equals(b.date()) &&  // 今日の予約か
-                        b.start_time().isBefore(currentTime) &&  // 開始時刻を過ぎている
-                        b.end_time().isAfter(currentTime));      // 終了時刻前
+                        today.equals(b.date()) &&
+                        b.start_time().isBefore(currentTime) &&
+                        b.end_time().isAfter(currentTime));
 
         if (isCurrentlyInUse) {
             return ReservationListStatus.CURRENTLY_IN_USE;
         }
 
-        // 予約数が上限に達しているかチェック
         long reservationCount = builders.stream()
                 .filter(b -> b.date() != null)
                 .count();
@@ -118,16 +128,16 @@ public class ReservationService {
             return ReservationListStatus.NO_VACANCIES;
         }
 
-        // 予約はあるが、まだ空きがある状態
         return ReservationListStatus.RESERVATION_AVAILABLE;
     }
 
     /**
-     * 1日あたりの最大予約可能時限数を取得します。
+     * 1日あたりの最大予約可能時限数を返す。
+     * 将来的にコマ数が変更される場合に備え、定数化している。
      *
-     * @return 最大予約可能時限数
+     * @return 最大予約可能時限数（現在は5）
      */
     private int getMaxPeriodsPerDay() {
-        return 4;
+        return 5;
     }
 }

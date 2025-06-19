@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +18,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping
+    @PostMapping
     public String showReservation(
             @RequestParam("pc_id") String pc_id,
             @RequestParam("date") LocalDate date,
@@ -27,8 +28,8 @@ public class ReservationController {
             date = LocalDate.now();
         }
 
-        reservationService.getReservation(pc_id, date)
-                .forEach(System.out::println);
+        var reservationList = reservationService.getReservation(pc_id, date);
+        model.addAttribute("reservationList", reservationList);
 
         return "protected/reservation";
     }
