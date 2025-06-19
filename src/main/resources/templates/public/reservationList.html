@@ -76,12 +76,16 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-primary btn-sm"
-
-                               th:href="@{/reservation(pc_id=${entry.key}, date=${date})}"
-                               th:if="${entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ||
-                               entry.value.status().name() == 'RESERVATION_AVAILABLE' ||
-                               entry.value.status().name() == 'CURRENTLY_IN_USE'}">予約する</a>
+                            <form th:action="@{/reservation}" method="post" class="d-inline-block">
+                                <input type="hidden" name="pc_id" th:value="${entry.key}" />
+                                <input type="hidden" name="date" th:value="${date}" />
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> <!-- CSRF対策 -->
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        th:if="${entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ||
+                                        entry.value.status().name() == 'RESERVATION_AVAILABLE' ||
+                                        entry.value.status().name() == 'CURRENTLY_IN_USE'}">予約する</button>
+                            </form>
 
                             <button class="btn btn-secondary btn-sm"
                                     disabled

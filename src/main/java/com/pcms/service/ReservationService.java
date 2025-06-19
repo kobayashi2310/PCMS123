@@ -1,11 +1,12 @@
 package com.pcms.service;
 
+import com.pcms.dto.reservation.ReservationDTO;
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.dto.reservationList.ReservationListDTO;
 import com.pcms.dto.reservationList.ReservationListStatus;
+import com.pcms.mapper.PcMapper;
 import com.pcms.model.PcStatus;
 import com.pcms.mapper.ReservationMapper;
-import com.pcms.model.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationMapper reservationRepository;
+    private final ReservationMapper reservationMapper;
+    private final PcMapper pcMapper;
 
     /**
      * 指定された日付のPC予約状況を取得します。
@@ -35,7 +37,7 @@ public class ReservationService {
      * @return PC_IDをキーとし、各PCの予約状況をマッピングしたMap
      */
     public Map<Integer, ReservationListDTO> getReservationList(LocalDate date) {
-        List<ReservationListBuilder> list = reservationRepository.findByDate(date.toString());
+        List<ReservationListBuilder> list = reservationMapper.findByDate(date.toString());
 
         return list.stream()
                 .collect(Collectors.groupingBy(
@@ -72,9 +74,15 @@ public class ReservationService {
                 ));
     }
 
-    public List<Reservation> getReservation(String pc_id, LocalDate date) {
+    public List<ReservationDTO> getReservation(String pc_id, LocalDate date) {
 
-        return reservationRepository.findByIdAndDate(pc_id, date.toString());
+        var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
+        var pcList = pcMapper.findByReservation();
+
+        System.out.println(reservationList.isEmpty());
+        pcList.forEach(System.out::println);
+
+        return null;
 
     }
 

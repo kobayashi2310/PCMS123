@@ -38,6 +38,10 @@ public interface ReservationMapper {
         FROM reservation
         WHERE
             pc_id = #{pc_id}
+        AND
+            date = #{date}
+        AND
+            status <> 'canceled'
     """)
     List<Reservation> findByIdAndDate(@Param("pc_id") String pc_id, @Param("date") String date);
 
