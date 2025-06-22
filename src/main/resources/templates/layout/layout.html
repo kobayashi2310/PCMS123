@@ -53,7 +53,7 @@
                                 </a>
                             </li>
                             <li class="nav-item d-flex align-items-center" sec:authorize="isAuthenticated()">
-                                <form method="post" th:action="@{/logout}" class="d-inline m-0 p-0">
+                                <form method="post" th:action="@{/logout}" class="d-inline m-0 p-0" onsubmit="return confirm('本当にログアウトしますか？')">
                                     <button type="submit"
                                             class="btn nav-link text-white border-0 bg-transparent p-0"
                                             style="vertical-align: middle;">

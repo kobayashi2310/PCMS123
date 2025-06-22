@@ -17,18 +17,21 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping
+    @RequestMapping
     public String showReservation(
-            @RequestParam("pc_id") String pc_id,
-            @RequestParam("date") LocalDate date,
+            @RequestParam(value = "pc_id", required = false) String pc_id,
+            @RequestParam(value = "date", required = false) LocalDate date,
             Model model
     ) {
         if (date == null || date.isBefore(LocalDate.now())) {
             date = LocalDate.now();
         }
+        
+        model.addAttribute("date", date);
+        model.addAttribute("pc_id", pc_id);
 
-        var reservationList = reservationService.getReservation(pc_id, date);
-        model.addAttribute("reservationList", reservationList);
+        var reservation = reservationService.getReservation(pc_id, date);
+        model.addAttribute("reservation", reservation);
 
         return "protected/reservation";
     }

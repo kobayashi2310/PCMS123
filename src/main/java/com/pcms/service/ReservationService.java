@@ -36,7 +36,7 @@ public class ReservationService {
      * @param date 確認対象の日付
      * @return PCのIDをキーとした予約情報のマップ
      */
-    public Map<Integer, ReservationListDTO> getReservationList(LocalDate date) {
+    public Map<Integer, ReservationListDTO> getReservationMap(LocalDate date) {
         List<ReservationListBuilder> list = reservationMapper.findByDate(date.toString());
 
         return list.stream()
@@ -82,15 +82,28 @@ public class ReservationService {
      * @return ReservationDTO オブジェクト（PC一覧・日付・各時限の空き状況）
      */
     public ReservationDTO getReservation(String pc_id, LocalDate date) {
-        var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
-        var pcDTOList = pcMapper.findByReservation().stream()
-                .map(p -> new PcDTO(p.getPc_id(), p.getName()))
-                .toList();
 
-        var boolList = new ArrayList<>(Collections.nCopies(5, true));
-        reservationList.forEach(r -> boolList.set(r.getPeriod_number() - 1, false));
+        if (pc_id != null && !pc_id.isEmpty()) {
+            var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
 
-        return new ReservationDTO(pcDTOList, date, boolList);
+            var boolList = new ArrayList<>(Collections.nCopies(5, true));
+            reservationList.forEach(r -> boolList.set(r.getPeriod_number() - 1, false));
+
+            var pcDTOList = pcMapper.findByReservation().stream()
+                    .map(p -> new PcDTO(p.getPc_id(), p.getName()))
+                    .toList();
+
+            return new ReservationDTO(pcDTOList, date, boolList);
+        } else {
+
+            var pcDTOList = pcMapper.findByReservation().stream()
+                    .map(p -> new PcDTO(p.getPc_id(), p.getName()))
+                    .toList();
+
+            return new ReservationDTO(pcDTOList, date, null);
+
+        }
+
     }
 
     /**
