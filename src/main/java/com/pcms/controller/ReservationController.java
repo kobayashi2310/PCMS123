@@ -17,12 +17,13 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @RequestMapping
+    @PostMapping
     public String showReservation(
             @RequestParam(value = "pc_id", required = false) String pc_id,
             @RequestParam(value = "date", required = false) LocalDate date,
             Model model
     ) {
+
         if (date == null || date.isBefore(LocalDate.now())) {
             date = LocalDate.now();
         }

@@ -39,7 +39,7 @@
                     </div>
                 </form>
 
-                <div th:if="${reservation.periodList()} != null">
+                <div th:if="${reservation.period()} != null">
                     <form id="reservationForm" action="checkreservation.html" method="post"
                           class="mx-auto" style="max-width: 500px; min-height: 80vh; padding-bottom: 120px;">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -49,27 +49,19 @@
                         <div class="mb-3 mt-5">
                             <h5 class="fs-4">貸出時限を指定</h5>
                             <div class="d-flex flex-wrap gap-3 mt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="period1" name="periods" value="1限">
-                                    <label class="form-check-label fs-5" for="period1">1限</label>
+                                <div class="form-check" th:each="entry : ${reservation.period()}">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           th:id="'period' + ${entry.key}"
+                                           name="periods"
+                                           th:value="${entry.key} + '限'"
+                                           th:if="${entry.key} != 99"
+                                           th:disabled="${!entry.value}">
+                                    <label class="form-check-label fs-5"
+                                           th:if="${entry.key} != 99"
+                                           th:for="'period' + ${entry.key}"
+                                           th:text="${entry.key} + '限'">1限</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="period2" name="periods" value="2限">
-                                    <label class="form-check-label fs-5" for="period2">2限</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="period3" name="periods" value="3限">
-                                    <label class="form-check-label fs-5" for="period3">3限</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="period4" name="periods" value="4限">
-                                    <label class="form-check-label fs-5" for="period4">4限</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="period5" name="periods" value="5限">
-                                    <label class="form-check-label fs-5" for="period5">5限</label>
-                                </div>
-                            </div>
                             <div id="timeSlots" class="mt-4"></div>
                         </div>
 

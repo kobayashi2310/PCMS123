@@ -25,7 +25,7 @@ public class ReservationListController {
             date = LocalDate.now();
         }
         model.addAttribute("date", date);
-        model.addAttribute("reservationMap", reservationService.getReservationMap(date));
+        model.addAttribute("reservationMap", reservationService.getReservation(date));
         return "public/reservationList";
     }
 

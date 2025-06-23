@@ -1,4 +1,4 @@
-package com.pcms.mapper;
+package com.pcms.dataaccess.mapper;
 
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.model.Reservation;

@@ -1,7 +1,7 @@
 package com.pcms.service;
 
 import com.pcms.model.User;
-import com.pcms.mapper.UserMapper;
+import com.pcms.dataaccess.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

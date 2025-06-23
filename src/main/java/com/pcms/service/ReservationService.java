@@ -1,22 +1,21 @@
 package com.pcms.service;
 
+import com.pcms.dataaccess.repository.PeriodRepository;
 import com.pcms.dto.reservation.PcDTO;
 import com.pcms.dto.reservation.ReservationDTO;
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.dto.reservationList.ReservationListDTO;
 import com.pcms.dto.reservationList.ReservationListStatus;
-import com.pcms.mapper.PcMapper;
-import com.pcms.mapper.ReservationMapper;
+import com.pcms.dataaccess.mapper.PcMapper;
+import com.pcms.dataaccess.mapper.ReservationMapper;
 import com.pcms.model.PcStatus;
+import com.pcms.model.Period;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationService {
 
+    private final PeriodRepository periodRepository;
     private final ReservationMapper reservationMapper;
     private final PcMapper pcMapper;
 
@@ -36,7 +36,7 @@ public class ReservationService {
      * @param date 確認対象の日付
      * @return PCのIDをキーとした予約情報のマップ
      */
-    public Map<Integer, ReservationListDTO> getReservationMap(LocalDate date) {
+    public Map<Integer, ReservationListDTO> getReservation(LocalDate date) {
         List<ReservationListBuilder> list = reservationMapper.findByDate(date.toString());
 
         return list.stream()
@@ -86,14 +86,19 @@ public class ReservationService {
         if (pc_id != null && !pc_id.isEmpty()) {
             var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
 
-            var boolList = new ArrayList<>(Collections.nCopies(5, true));
-            reservationList.forEach(r -> boolList.set(r.getPeriod_number() - 1, false));
+            List<Period> periodList = periodRepository.findAll();
+            Map<Byte, Boolean> periodMap = new TreeMap<>();
+            for (Period period : periodList) {
+                periodMap.put(period.getPeriod_number(), true);
+            }
+            reservationList.forEach(r -> periodMap.put(r.getPeriod_number(), false));
 
             var pcDTOList = pcMapper.findByReservation().stream()
                     .map(p -> new PcDTO(p.getPc_id(), p.getName()))
                     .toList();
 
-            return new ReservationDTO(pcDTOList, date, boolList);
+            return new ReservationDTO(pcDTOList, date, periodMap);
+
         } else {
 
             var pcDTOList = pcMapper.findByReservation().stream()

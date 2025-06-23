@@ -1,4 +1,4 @@
-package com.pcms.mapper;
+package com.pcms.dataaccess.mapper;
 
 import com.pcms.handler.repository.UserRoleTypeHandler;
 import com.pcms.model.User;
