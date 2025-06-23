@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title layout:fragement="">予約内容確認</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <main>
+        <div class="container mt-5" style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
+            <h2 class="mb-4 text-center">予約内容の確認</h2>
+
+            <!-- 利用グループごとに繰り返し表示 -->
+            <div th:each="group, iterStat : ${checkDTO.periodGroups}">
+                <h3 th:text="'利用時間' + ${iterStat.index + 1}"></h3>
+                <dl>
+                    <dt>貸出日</dt>
+                    <dd th:text="${checkDTO.localDate()}">2026-06-24</dd>
+
+                    <dt>利用開始時間</dt>
+                    <dd th:text="${checkDTO.startTimes[iterStat.index]}">9:00</dd>
+
+                    <dt>返却予定時間</dt>
+                    <dd th:text="${checkDTO.endTimes[iterStat.index]}">12:10</dd>
+
+                    <dt>授業コマ</dt>
+                    <dd th:text="${#strings.join(group, '・') + '限'}">1限・2限</dd>
+
+                    <dt>利用目的</dt>
+                    <dd th:text="${checkDTO.otherPurpose}">授業のため</dd>
+                </dl>
+            </div>
+
+
+            <form action="sendresult.html" method="post" class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">戻る</button>
+                <button type="submit" class="btn btn-primary">申請</button>
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.pcms.mapper;
+package com.pcms.dataaccess.mapper;
 
 import com.pcms.model.Pc;
 import org.apache.ibatis.annotations.Mapper;

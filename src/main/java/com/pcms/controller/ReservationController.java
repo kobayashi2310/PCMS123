@@ -4,11 +4,14 @@ import com.pcms.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/reservation")
@@ -23,6 +26,7 @@ public class ReservationController {
             @RequestParam(value = "date", required = false) LocalDate date,
             Model model
     ) {
+
         if (date == null || date.isBefore(LocalDate.now())) {
             date = LocalDate.now();
         }
@@ -34,6 +38,20 @@ public class ReservationController {
         model.addAttribute("reservation", reservation);
 
         return "protected/reservation";
+    }
+
+    @PostMapping("/check")
+    public String checkReservation(
+            @RequestParam("pc_id") String pc_id,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("otherPurpose") String otherPurpose,
+            @RequestParam("periods") List<String> periods,
+            Model model
+    ) {
+
+        model.addAttribute("checkDTO", reservationService.checkReservation(pc_id, date, otherPurpose, periods));
+
+        return "protected/checkReservation";
     }
 
 }

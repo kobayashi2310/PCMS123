@@ -1,22 +1,23 @@
 package com.pcms.service;
 
+import com.pcms.dataaccess.repository.PeriodRepository;
 import com.pcms.dto.reservation.PcDTO;
+import com.pcms.dto.reservation.ReservationCheckDTO;
 import com.pcms.dto.reservation.ReservationDTO;
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.dto.reservationList.ReservationListDTO;
 import com.pcms.dto.reservationList.ReservationListStatus;
-import com.pcms.mapper.PcMapper;
-import com.pcms.mapper.ReservationMapper;
+import com.pcms.dataaccess.mapper.PcMapper;
+import com.pcms.dataaccess.mapper.ReservationMapper;
 import com.pcms.model.PcStatus;
+import com.pcms.model.Period;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationService {
 
+    private final PeriodRepository periodRepository;
     private final ReservationMapper reservationMapper;
     private final PcMapper pcMapper;
 
@@ -36,7 +38,7 @@ public class ReservationService {
      * @param date 確認対象の日付
      * @return PCのIDをキーとした予約情報のマップ
      */
-    public Map<Integer, ReservationListDTO> getReservationMap(LocalDate date) {
+    public Map<Integer, ReservationListDTO> getReservation(LocalDate date) {
         List<ReservationListBuilder> list = reservationMapper.findByDate(date.toString());
 
         return list.stream()
@@ -86,14 +88,19 @@ public class ReservationService {
         if (pc_id != null && !pc_id.isEmpty()) {
             var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
 
-            var boolList = new ArrayList<>(Collections.nCopies(5, true));
-            reservationList.forEach(r -> boolList.set(r.getPeriod_number() - 1, false));
+            List<Period> periodList = periodRepository.findAll();
+            Map<Byte, Boolean> periodMap = new TreeMap<>();
+            for (Period period : periodList) {
+                periodMap.put(period.getPeriod_number(), true);
+            }
+            reservationList.forEach(r -> periodMap.put(r.getPeriod_number(), false));
 
             var pcDTOList = pcMapper.findByReservation().stream()
                     .map(p -> new PcDTO(p.getPc_id(), p.getName()))
                     .toList();
 
-            return new ReservationDTO(pcDTOList, date, boolList);
+            return new ReservationDTO(pcDTOList, date, periodMap);
+
         } else {
 
             var pcDTOList = pcMapper.findByReservation().stream()
@@ -104,6 +111,74 @@ public class ReservationService {
 
         }
 
+    }
+
+    public ReservationCheckDTO checkReservation(String pc_id, LocalDate date, String otherPurpose, List<String> periods) {
+
+        List<Integer> periodInts = periods.stream()
+                .map(p -> Integer.parseInt(p.replace("限", "")))
+                .sorted()
+                .toList();
+
+        List<List<Integer>> groups = getGroups(periodInts);
+
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<String> startTimes = new ArrayList<>();
+        List<String> endTimes = new ArrayList<>();
+
+        for (List<Integer> group : groups) {
+            startTimes.add(startTime(group.getFirst()).format(timeFormatter));
+            endTimes.add(endTime(group.getLast()).format(timeFormatter));
+        }
+
+        return new ReservationCheckDTO(pc_id, date, otherPurpose, groups, startTimes, endTimes);
+
+
+    }
+
+    private static List<List<Integer>> getGroups(List<Integer> periodInts) {
+        List<List<Integer>> groups = new ArrayList<>();
+        List<Integer> currentGroup = new ArrayList<>();
+        int prev = 10;
+
+        for (int p : periodInts) {
+            if (p == prev + 1) {
+                currentGroup.add(p);
+            } else {
+                if (!currentGroup.isEmpty())
+                    groups.add(currentGroup);
+                currentGroup = new ArrayList<>();
+                currentGroup.add(p);
+            }
+            prev = p;
+        }
+
+        if (!currentGroup.isEmpty())
+            groups.add(currentGroup);
+        return groups;
+    }
+
+    private LocalTime startTime(int period) {
+        return switch (period) {
+            case 1 -> LocalTime.of(9, 0);
+            case 2 -> LocalTime.of(10, 40);
+            case 3 -> LocalTime.of(13, 0);
+            case 4 -> LocalTime.of(14, 30);
+            case 5 -> LocalTime.of(16, 10);
+            default -> LocalTime.of(0, 0);
+        };
+    }
+
+    private LocalTime endTime(int period) {
+        return switch (period) {
+            case 1 -> LocalTime.of(10, 30);
+            case 2 -> LocalTime.of(12, 10);
+            case 3 -> LocalTime.of(14, 20);
+            case 4 -> LocalTime.of(16, 0);
+            case 5 -> LocalTime.of(17, 40);
+            default -> LocalTime.of(0, 0);
+        };
     }
 
     /**
