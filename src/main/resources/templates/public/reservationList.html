@@ -27,10 +27,8 @@
     <main style="margin-bottom: 100px;">
         <div class="container mt-5">
             <h2 class="mb-4">🖥 ノートPC貸出状況一覧</h2>
-            <!-- 貸出状況テーブル -->
             <div class="table-responsive">
 
-                <!-- 日付選択フォーム -->
                 <div class="card mb-4">
                     <div class="card-header bg-light text-black fw-bold">
                         表示日付を選択
@@ -48,56 +46,58 @@
                     </div>
                 </div>
 
-                <table class="table table-bordered table-hover text-center pc-status-table mx-auto">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>PC名</th>
-                        <th>状態</th>
-                        <th>状況</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="entry : ${reservationMap}">
-                        <td th:text="${entry.value.pc_name}"></td>
-                        <td>
-                            <span class="badge" style="font-size: 1.5rem;" th:classappend="${
-                                entry.value.status().name() == 'CURRENTLY_IN_USE' ? 'bg-danger' :
-                                entry.value.status().name() == 'RESERVATION_AVAILABLE' ? 'bg-warning text-dark' :
-                                entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ? 'bg-success' :
-                                entry.value.status().name() == 'NOT_AVAILABLE' ? 'bg-secondary' :
-                                entry.value.status().name() == 'NO_VACANCIES' ? 'bg-secondary' : ''
-                            }" th:text="${entry.value.status().value}">状態</span>
-                        </td>
-                        <td>
-                            <div th:if="${entry.value.situation != null and !#lists.isEmpty(entry.value.situation)}">
-                                <p th:each="situation : ${entry.value.situation}"
-                                    th:text="${situation}" ></p>
-                            </div>
-                        </td>
-                        <td>
-                            <form th:action="@{/reservation}" method="post" class="d-inline-block">
-                                <input type="hidden" name="pc_id" th:value="${entry.key}" />
-                                <input type="hidden" name="date" th:value="${date}" />
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> <!-- CSRF対策 -->
-                                <button type="submit"
-                                        class="btn btn-primary btn-sm"
-                                        th:if="${entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ||
-                                        entry.value.status().name() == 'RESERVATION_AVAILABLE' ||
-                                        entry.value.status().name() == 'CURRENTLY_IN_USE'}">予約する</button>
-                            </form>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center pc-status-table mx-auto">
 
-                            <button class="btn btn-secondary btn-sm"
-                                    disabled
-                                    th:if="${
-                               entry.value.status().name() == 'NOT_AVAILABLE' ||
-                               entry.value.status().name() == 'NO_VACANCIES'
-                               }">予約不可
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <thead class="table-dark">
+                            <tr>
+                                <th>PC名</th>
+                                <th>状態</th>
+                                <th>状況</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="entry : ${reservationMap}">
+                                <td th:text="${entry.value.pc_name}"></td>
+                                <td>
+                                    <span class="badge" style="font-size: 1.5rem;" th:classappend="${
+                                        entry.value.status().name() == 'CURRENTLY_IN_USE' ? 'bg-danger' :
+                                        entry.value.status().name() == 'RESERVATION_AVAILABLE' ? 'bg-warning text-dark' :
+                                        entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ? 'bg-success' :
+                                        entry.value.status().name() == 'NOT_AVAILABLE' ? 'bg-secondary' :
+                                        entry.value.status().name() == 'NO_VACANCIES' ? 'bg-secondary' : ''
+                                    }" th:text="${entry.value.status().value}">状態</span>
+                                </td>
+                                <td>
+                                    <div th:if="${entry.value.situation != null and !#lists.isEmpty(entry.value.situation)}">
+                                        <p th:each="situation : ${entry.value.situation}"
+                                            th:text="${situation}" ></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form th:action="@{/reservation}" method="post" class="d-inline-block">
+                                        <input type="hidden" name="pc_id" th:value="${entry.key}" />
+                                        <input type="hidden" name="date" th:value="${date}" />
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> <!-- CSRF対策 -->
+                                        <button type="submit"
+                                                class="btn btn-primary btn-sm"
+                                                th:if="${entry.value.status().name() == 'AVAILABLE_FOR_RESERVATION' ||
+                                                entry.value.status().name() == 'RESERVATION_AVAILABLE' ||
+                                                entry.value.status().name() == 'CURRENTLY_IN_USE'}">予約する</button>
+                                    </form>
+
+                                    <button class="btn btn-secondary btn-sm" disabled
+                                            th:if="${
+                                       entry.value.status().name() == 'NOT_AVAILABLE' ||
+                                       entry.value.status().name() == 'NO_VACANCIES'
+                                       }">予約不可
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>

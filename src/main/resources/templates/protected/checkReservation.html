@@ -1,49 +1,63 @@
 <!DOCTYPE html>
 <html lang="ja"
       layout:decorate="~{layout/layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title layout:fragement="">予約内容確認</title>
+    <title layout:fragement="title">予約内容確認</title>
+    <script>
+        function goBack() {
+            window.history.replaceState(null, null, window.location.href);
+            window.history.back();
+        }
+    </script>
 </head>
 
 <body>
 
-<div layout:fragment="content">
-    <main>
-        <div class="container mt-5" style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
-            <h2 class="mb-4 text-center">予約内容の確認</h2>
+    <div layout:fragment="content">
+        <main>
+            <div class="container mt-5" style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
+                <h2 class="mb-4 text-center">予約内容の確認</h2>
 
-            <!-- 利用グループごとに繰り返し表示 -->
-            <div th:each="group, iterStat : ${checkDTO.periodGroups}">
-                <h3 th:text="'利用時間' + ${iterStat.index + 1}"></h3>
-                <dl>
-                    <dt>貸出日</dt>
-                    <dd th:text="${checkDTO.localDate()}">2026-06-24</dd>
+                <div th:each="iterStat, iter : ${checkDTO.periodGroups}">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 th:text="'利用時間' + ${iter.index + 1}"
+                                style="display: block; text-align: center"
+                                class="mb-3">利用時間1</h3>
 
-                    <dt>利用開始時間</dt>
-                    <dd th:text="${checkDTO.startTimes[iterStat.index]}">9:00</dd>
+                            <dl class="row">
+                                <dt class="col-sm-5">貸出日</dt>
+                                <dd class="col-sm-7" th:text="${checkDTO.localDate()}"></dd>
 
-                    <dt>返却予定時間</dt>
-                    <dd th:text="${checkDTO.endTimes[iterStat.index]}">12:10</dd>
+                                <dt class="col-sm-5">利用開始時間</dt>
+                                <dd class="col-sm-7" th:text="${checkDTO.startTimes[iter.index]}"></dd>
 
-                    <dt>授業コマ</dt>
-                    <dd th:text="${#strings.join(group, '・') + '限'}">1限・2限</dd>
+                                <dt class="col-sm-5">返却予定時間</dt>
+                                <dd class="col-sm-7" th:text="${checkDTO.endTimes[iter.index]}"></dd>
 
-                    <dt>利用目的</dt>
-                    <dd th:text="${checkDTO.otherPurpose}">授業のため</dd>
-                </dl>
+                                <dt class="col-sm-5">授業コマ</dt>
+                                <dd class="col-sm-7" th:text="'利用時間 ' + ${iter.current}"></dd>
+
+                                <dt class="col-sm-5">利用目的</dt>
+                                <dd class="col-sm-7" th:text="${checkDTO.otherPurpose}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <form th:action="@{/reservation/sendResult}" method="post" class="d-flex justify-content-between mb-5">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" th:name="date" th:value="${checkDTO.localDate()}">
+                    <input type="hidden" th:name="pc_id" th:value="${checkDTO.pc_id()}">
+                    <input type="hidden" th:name="periods" th:value="${checkDTO.periodGroups()}">
+                    <input type="hidden" th:name="otherPurpose" th:value="${checkDTO.otherPurpose()}">
+
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">戻る</button>
+                    <button type="submit" class="btn btn-primary">申請</button>
+                </form>
             </div>
-
-
-            <form action="sendresult.html" method="post" class="d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" onclick="history.back()">戻る</button>
-                <button type="submit" class="btn btn-primary">申請</button>
-            </form>
-        </div>
-
-    </main>
-</div>
-
+        </main>
+    </div>
 </body>
 </html>

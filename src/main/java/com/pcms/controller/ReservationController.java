@@ -20,7 +20,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping
+    @RequestMapping
     public String showReservation(
             @RequestParam(value = "pc_id", required = false) String pc_id,
             @RequestParam(value = "date", required = false) LocalDate date,
@@ -48,10 +48,30 @@ public class ReservationController {
             @RequestParam("periods") List<String> periods,
             Model model
     ) {
+        // 時限が1つも選択されていない場合
+        if (periods.isEmpty()) {
+            model.addAttribute("pc_id", pc_id);
+            model.addAttribute("date", date);
+            model.addAttribute("otherPurpose", otherPurpose);
+            model.addAttribute("error", "1つ以上の時間帯を選択してください");
+            return "protected/reservation";
+        }
 
         model.addAttribute("checkDTO", reservationService.checkReservation(pc_id, date, otherPurpose, periods));
 
         return "protected/checkReservation";
+    }
+
+    @GetMapping("/sendResult")
+    public String sendResult() {
+
+        return "protected/sendResult";
+
+    }
+
+    @PostMapping("/sendResult")
+    public String sendResult(Model model) {
+        return "redirect:/reservation/sendResult";
     }
 
 }

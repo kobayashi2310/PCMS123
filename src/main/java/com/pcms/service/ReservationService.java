@@ -115,12 +115,11 @@ public class ReservationService {
 
     public ReservationCheckDTO checkReservation(String pc_id, LocalDate date, String otherPurpose, List<String> periods) {
 
-        List<Integer> periodInts = periods.stream()
-                .map(p -> Integer.parseInt(p.replace("限", "")))
-                .sorted()
-                .toList();
-
-        List<List<Integer>> groups = getGroups(periodInts);
+        List<List<Integer>> groups = getGroups(periods
+                                                .stream()
+                                                .sorted()
+                                                .map(Integer::parseInt)
+                                                .toList());
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -133,7 +132,6 @@ public class ReservationService {
         }
 
         return new ReservationCheckDTO(pc_id, date, otherPurpose, groups, startTimes, endTimes);
-
 
     }
 

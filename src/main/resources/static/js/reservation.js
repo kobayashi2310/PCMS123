@@ -57,3 +57,13 @@ function updateTimeFields() {
         container.appendChild(div);
     });
 }
+
+function validateForm() {
+    const checkboxes = document.querySelectorAll('input[name="periods"]:checked');
+    if (checkboxes.length === 0) {
+        document.getElementById('error-message').style.display = 'block';
+        return false;
+    }
+    document.getElementById('error-message').style.display = 'none';
+    return true;
+}

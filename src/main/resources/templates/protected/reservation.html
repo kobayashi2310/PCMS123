@@ -16,7 +16,7 @@
                  style="max-width: 600px; min-height: 80vh; padding-bottom: 120px;">
                 <h1 class="text-center mb-4">PC予約</h1>
 
-                <form th:action="@{/reservation}" method="post" style="max-width: 500px; margin: auto;" class="mb-3">
+                <form th:action="@{/reservation}" method="get" style="max-width: 500px; margin: auto;" class="mb-3">
                     <div class="mb-3">
                         <label class="form-label" for="date">日付:</label>
                         <input class="form-control" id="date" name="date" th:value="${date}" type="date">
@@ -48,13 +48,19 @@
 
                         <div class="mb-3 mt-5">
                             <h5 class="fs-4">貸出時限を指定</h5>
+                            <div th:if="${error != null}" class="alert alert-danger">
+                                <p th:text="${error}"></p>
+                            </div>
+                            <div id="error-message" class="text-danger" style="display: none;">
+                                1つ以上の時間帯を選択してください。
+                            </div>
                             <div class="d-flex flex-wrap gap-3 mt-2">
                                 <div class="form-check" th:each="entry : ${reservation.period()}">
                                     <input class="form-check-input"
                                            type="checkbox"
                                            th:id="'period' + ${entry.key}"
                                            name="periods"
-                                           th:value="${entry.key} + '限'"
+                                           th:value="${entry.key}"
                                            th:if="${entry.key} != 99"
                                            th:disabled="${!entry.value}">
                                     <label class="form-check-label fs-5"
@@ -68,12 +74,14 @@
                         <div class="mb-3" id="otherPurposeBox">
                             <label for="otherPurpose" class="form-label">利用目的</label>
                             <textarea class="form-control"
-                                      id="otherPurpose" name="otherPurpose" rows="4"
-                                      maxlength="500"></textarea>
+                                      id="otherPurpose" name="otherPurpose"
+                                      rows="4" maxlength="500"
+                                      th:text="${otherPurpose}"></textarea>
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">確認画面へ</button>
+                            <button type="submit" class="btn btn-primary" onclick="return validateForm()">送信</button>
+                        </div>
                         </div>
                     </form>
                 </div>
