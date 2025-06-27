@@ -118,12 +118,11 @@ public class ReservationService {
 
     }
 
-    public ReservationCheckDTO checkReservation(String pc_id, LocalDate date, String otherPurpose, List<String> periods) {
+    public ReservationCheckDTO checkReservation(int pc_id, LocalDate date, String otherPurpose, List<Byte> periods) {
 
-        List<List<Integer>> groups = getGroups(periods
+        List<List<Byte>> groups = getGroups(periods
                                                 .stream()
                                                 .sorted()
-                                                .map(Integer::parseInt)
                                                 .toList());
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -131,7 +130,7 @@ public class ReservationService {
         List<String> startTimes = new ArrayList<>();
         List<String> endTimes = new ArrayList<>();
 
-        for (List<Integer> group : groups) {
+        for (List<Byte> group : groups) {
             startTimes.add(startTime(group.getFirst()).format(timeFormatter));
             endTimes.add(endTime(group.getLast()).format(timeFormatter));
         }
@@ -159,12 +158,12 @@ public class ReservationService {
 
     }
 
-    private static List<List<Integer>> getGroups(List<Integer> periodInts) {
-        List<List<Integer>> groups = new ArrayList<>();
-        List<Integer> currentGroup = new ArrayList<>();
+    private static List<List<Byte>> getGroups(List<Byte> periodInts) {
+        List<List<Byte>> groups = new ArrayList<>();
+        List<Byte> currentGroup = new ArrayList<>();
         int prev = 10;
 
-        for (int p : periodInts) {
+        for (byte p : periodInts) {
             if (p == prev + 1) {
                 currentGroup.add(p);
             } else {

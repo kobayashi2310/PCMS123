@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -43,14 +42,14 @@ public class ReservationController {
 
     @PostMapping("/check")
     public String checkReservation(
-            @RequestParam("pc_id") String pc_id,
+            @RequestParam("pc_id") int pc_id,
             @RequestParam("date") LocalDate date,
             @RequestParam("otherPurpose") String otherPurpose,
-            @RequestParam("periods") List<String> periods,
+            @RequestParam("periods") List<Byte> periods,
             Model model
     ) {
         // 時限が1つも選択されていない場合
-        if (periods.isEmpty()) {
+        if (periods == null || periods.isEmpty()) {
             model.addAttribute("pc_id", pc_id);
             model.addAttribute("date", date);
             model.addAttribute("otherPurpose", otherPurpose);
@@ -72,12 +71,17 @@ public class ReservationController {
 
     @PostMapping("/sendResult")
     public String sendResult(
+            Model model,
             HttpSession session,
             @RequestParam("pc_id") int pc_id,
             @RequestParam("date") LocalDate date,
             @RequestParam("otherPurpose") String otherPurpose,
             @RequestParam("periods") List<Byte> periods
     ) {
+
+        if (periods == null || periods.isEmpty()) {
+            return checkReservation(pc_id, date, otherPurpose, null, model);
+        }
 
         String email = (String) session.getAttribute("LOGIN_EMAIL");
         reservationService.reserve(email, pc_id, date, otherPurpose, periods);
