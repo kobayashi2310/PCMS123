@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pcms.dataaccess.mapper.ReservationMapper">
+
+    <insert id="reserve" parameterType="java.util.List">
+        INSERT INTO reservation (
+        user_id,
+        pc_id,
+        date,
+        period_number,
+        reason
+        )
+        VALUES
+        <foreach collection="reservations" item="reservation" separator=",">
+            (
+            #{reservation.user_id},
+            #{reservation.pc_id},
+            #{reservation.date},
+            #{reservation.period_number},
+            #{reservation.reason}
+            )
+        </foreach>
+    </insert>
+    
+</mapper>

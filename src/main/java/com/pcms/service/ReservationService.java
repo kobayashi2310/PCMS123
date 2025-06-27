@@ -1,5 +1,6 @@
 package com.pcms.service;
 
+import com.pcms.dataaccess.mapper.UserMapper;
 import com.pcms.dataaccess.repository.PeriodRepository;
 import com.pcms.dto.reservation.PcDTO;
 import com.pcms.dto.reservation.ReservationCheckDTO;
@@ -11,8 +12,11 @@ import com.pcms.dataaccess.mapper.PcMapper;
 import com.pcms.dataaccess.mapper.ReservationMapper;
 import com.pcms.model.PcStatus;
 import com.pcms.model.Period;
+import com.pcms.model.Reservation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationService {
 
+    private final UserMapper userMapper;
     private final PeriodRepository periodRepository;
     private final ReservationMapper reservationMapper;
     private final PcMapper pcMapper;
@@ -132,6 +137,25 @@ public class ReservationService {
         }
 
         return new ReservationCheckDTO(pc_id, date, otherPurpose, groups, startTimes, endTimes);
+
+    }
+
+    @Transactional
+    public void reserve(String email, int pc_id, LocalDate date, String otherPurpose, List<Byte> periods) {
+
+        int user_id = userMapper.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found:" + email))
+                .getUser_id();
+
+        List<Reservation> reservations = periods.stream()
+                .sorted()
+                .map(id -> new Reservation(user_id, pc_id, date, id, otherPurpose))
+                .toList();
+
+        int result = reservationMapper.reserve(reservations);
+        if (result != periods.size()) {
+            throw new IllegalStateException("予約が登録できませんでした");
+        }
 
     }
 

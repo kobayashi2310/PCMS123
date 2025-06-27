@@ -20,6 +20,11 @@ public class Reservation {
     private Integer approver;
     private LocalDateTime approved_time;
 
+    public Reservation(int user_id, int pc_id, LocalDate date, byte period_number, String reason) {
+        this(-1, user_id, pc_id, date, period_number, reason,
+                null, null, null, null);
+    }
+
     public Reservation(int reservation_id, int user_id,
                        int pc_id, LocalDate date, byte period_number,
                        String reason, String status,
