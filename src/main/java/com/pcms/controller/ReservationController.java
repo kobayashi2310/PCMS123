@@ -1,6 +1,7 @@
 package com.pcms.controller;
 
 import com.pcms.service.ReservationService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,7 +71,17 @@ public class ReservationController {
     }
 
     @PostMapping("/sendResult")
-    public String sendResult(Model model) {
+    public String sendResult(
+            HttpSession session,
+            @RequestParam("pc_id") int pc_id,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("otherPurpose") String otherPurpose,
+            @RequestParam("periods") List<Byte> periods
+    ) {
+
+        String email = (String) session.getAttribute("LOGIN_EMAIL");
+        reservationService.reserve(email, pc_id, date, otherPurpose, periods);
+
         return "redirect:/reservation/sendResult";
     }
 
