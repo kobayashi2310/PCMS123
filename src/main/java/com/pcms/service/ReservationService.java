@@ -139,6 +139,17 @@ public class ReservationService {
 
     }
 
+    /**
+     * 特定の目的のために、特定の日付と時間帯に、指定されたユーザー用に PC を予約します
+     *
+     * @param email PCを予約するユーザーのメールアドレス
+     * @param pc_id 予約するPCのID
+     * @param date 予約日
+     * @param otherPurpose 予約の説明または目的
+     * @param periods 予約が行われた期間を表す期間IDのリスト
+     * @throws UsernameNotFoundException 引数のメールアドレスがどのユーザーとも一致しない場合
+     * @throws IllegalStateException 予約プロセスが失敗した場合、または要求された期間をすべて登録できない場合
+     */
     @Transactional
     public void reserve(String email, int pc_id, LocalDate date, String otherPurpose, List<Byte> periods) {
 
@@ -158,10 +169,17 @@ public class ReservationService {
 
     }
 
+    /**
+     * 指定されたリストから連続するバイトを個別のサブリストにグループ化します。
+     * 各サブリストには連続するバイトのシーケンスが含まれます。
+     *
+     * @param periodInts 連続するサブリストにグループ化されるバイトのリスト
+     * @return サブリストのリスト。各サブリストには連続するバイトが含まれる
+     */
     private static List<List<Byte>> getGroups(List<Byte> periodInts) {
         List<List<Byte>> groups = new ArrayList<>();
         List<Byte> currentGroup = new ArrayList<>();
-        int prev = 10;
+        byte prev = 10;
 
         for (byte p : periodInts) {
             if (p == prev + 1) {
@@ -180,6 +198,11 @@ public class ReservationService {
         return groups;
     }
 
+    /**
+     * 仮実装。指定されたコマに対応する授業開始時間を返す。
+     * @param period コマ
+     * @return 指定されたコマに対応する授業開始時間
+     */
     private LocalTime startTime(int period) {
         return switch (period) {
             case 1 -> LocalTime.of(9, 0);
@@ -191,6 +214,11 @@ public class ReservationService {
         };
     }
 
+    /**
+     * 仮実装。指定されたコマに対応する授業終了時間を返す。
+     * @param period コマ
+     * @return 指定されたコマに対応する授業終了時間
+     */
     private LocalTime endTime(int period) {
         return switch (period) {
             case 1 -> LocalTime.of(10, 30);

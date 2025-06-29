@@ -19,6 +19,14 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final CustomAuthenticationFailureHandler failureHandler;
 
+    /**
+     * アプリケーションのセキュリティフィルターチェーンを設定します。
+     * これには、リクエストの承認、ログインフォームのカスタマイズ、ログアウト処理の設定が含まれます。
+     *
+     * @param http セキュリティを構成するために使用される {@link HttpSecurity} オブジェクト
+     * @return アプリケーションに構成された {@link SecurityFilterChain}
+     * @throws Exception セキュリティ構成の構築中にエラーが発生した場合
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

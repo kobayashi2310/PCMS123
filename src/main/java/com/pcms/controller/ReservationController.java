@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 予約関連の操作を処理するためのコントローラークラス。予約の表示、検証、送信のためのエンドポイントを提供します。
+ */
 @Controller
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
@@ -20,6 +23,16 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    /**
+     * 指定されたPCの予約ページを、特定の日付に基づいて表示します。
+     * 日付が未指定または過去の場合は、現在の日付を使用します。
+     * 予約データは取得後、モデルに追加して画面に表示します。
+     *
+     * @param pc_id 予約の詳細を表示するPCのID。デフォルトまたは汎用の予約リストを取得する場合はnullにすることができます
+     * @param date 予約の詳細を表示する日付。nullまたは今日以前の場合は、現在の日付が使用されます
+     * @param model ビューのレンダリングに必要な属性を追加するために使用される Spring モデル オブジェクト
+     * @return レンダリングするビュー テンプレートの名前。具体的には「protected/reservation」です
+     */
     @RequestMapping
     public String showReservation(
             @RequestParam(value = "pc_id", required = false) String pc_id,
@@ -40,6 +53,20 @@ public class ReservationController {
         return "protected/reservation";
     }
 
+    /**
+     * 指定されたパラメータに基づいて予約の詳細を確認し、少なくとも1つの時間帯が選択されているかどうかを検証します。
+     * 時間帯が選択されていない場合は、モデルにエラーメッセージが追加され、ユーザーは予約ページにリダイレクトされます。
+     * 選択されている場合は、予約チェックの詳細が処理され、モデルに追加されます。
+     *
+     * @param pc_id 予約を確認する PC の ID
+     * @param date 予約を確認する日付
+     * @param otherPurpose 予約の説明または理由
+     * @param periods 予約に選択された時間帯（コマ）のリスト
+     * @param model ビューにデータを渡すために使用される Spring モデル オブジェクト
+     * @return レンダリングするビューテンプレートの名前。
+     *          時間帯が選択されていない場合は「protected/reservation」を返し、
+     *          検証に成功した場合は「protected/checkReservation」を返します。
+     */
     @PostMapping("/check")
     public String checkReservation(
             @RequestParam("pc_id") int pc_id,
@@ -69,6 +96,18 @@ public class ReservationController {
 
     }
 
+    /**
+     * 予約情報を送信して予約を作成し、結果ページにリダイレクトします。コマが指定されていない場合は、予約情報を検証し、予約確認ページを再表示します。
+     *
+     * @param model ビューに属性を渡すために使用される Spring モデル オブジェクト
+     * @param session セッション属性から現在のユーザーの電子メールを取得するために使用される HttpSession オブジェクト
+     * @param pc_id 予約する PC の ID
+     * @param date 予約が行われる日付
+     * @param otherPurpose 予約の説明または理由。
+     * @param periods 予約が行われる期間（コマ）のリスト
+     * @return ビューまたはリダイレクトルートの名前。コマが指定されていない場合は、予約確認ページを返します。
+     *          ピリオドが指定されている場合は、予約結果ページにリダイレクトします。
+     */
     @PostMapping("/sendResult")
     public String sendResult(
             Model model,
