@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class LoginController {
 
+    /**
+     * ログインページを表示するためのGETリクエストを処理します。
+     * メールやエラーメッセージなど、ログインに関連するデータをHTTPセッションから取得し、
+     * ログインページでレンダリングするためにモデルに追加します。
+     * 取得後、これらの属性はセッションから削除されます。
+     *
+     * @param session 「LOGIN_EMAIL」や「LOGIN_ERROR」などの属性を取得するために使用されるHTTPセッション
+     * @param model ビューのログインメールやエラーなどの属性を保存するために使用するモデル
+     * @return レンダリングされるビューの名前、具体的には「public/login」
+     */
     @GetMapping
     public String showLoginPage(HttpSession session, Model model) {
         String loginEmail = (String) session.getAttribute("LOGIN_EMAIL");
