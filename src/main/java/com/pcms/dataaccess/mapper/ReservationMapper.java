@@ -4,47 +4,35 @@ import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.model.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
 @Mapper
 public interface ReservationMapper {
 
-    @Select("""
-        SELECT
-            pc.pc_id,
-            pc.name as pc_name,
-            pc.status,
-            reservation.date,
-            user.name,
-            period.period_number,
-            period.start_time,
-            period.end_time
-        FROM pc
-            LEFT JOIN reservation ON pc.pc_id = reservation.pc_id
-                AND reservation.date = #{date}
-                AND reservation.status <> 'cancelled'
-            LEFT JOIN period ON reservation.period_number = period.period_number
-            LEFT JOIN user ON reservation.user_id = user.user_id
-        WHERE pc.status <> 'take_out' AND pc.status <> 'maintenance'
-        ORDER BY pc.pc_id, period_number;
-    """)
+    /**
+     * 指定された日付の予約リストを取得します
+     *
+     * @param date 予約を取得する必要がある日付（文字列形式）
+     * @return 指定された日付の予約詳細を含む {@code ReservationListBuilder} レコードのリスト
+     */
     List<ReservationListBuilder> findByDate(@Param("date") String date);
 
-    @Select("""
-        SELECT
-            *
-        FROM reservation
-        WHERE
-            pc_id = #{pc_id}
-        AND
-            date = #{date}
-        AND
-            status <> 'canceled'
-    """)
+    /**
+     * ステータスが「take_out」の PC を除いて、特定の PC と日付の予約リストを取得します。
+     *
+     * @param pc_id 予約を取得する PC の識別子
+     * @param date  予約を取得する日付を文字列形式で指定します
+     * @return 指定された PC と日付の予約の詳細を含む {@code Reservation} オブジェクトのリスト。
+     */
     List<Reservation> findByIdAndDate(@Param("pc_id") String pc_id, @Param("date") String date);
 
+    /**
+     * 指定された予約リストをシステム内に予約します
+     *
+     * @param reservations 追加する予約を表す {@code Reservation} オブジェクトのリスト
+     * @return 予約に成功した数
+     */
     int reserve(@Param("reservations") List<Reservation> reservations);
 
 }

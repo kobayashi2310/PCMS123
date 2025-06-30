@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja"
       layout:decorate="~{layout/layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title layout:fragement="title">予約内容確認</title>
     <script>
@@ -47,7 +48,6 @@
                 </div>
 
                 <form th:action="@{/reservation/sendResult}" method="post" class="d-flex justify-content-between mb-5">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <input type="hidden" th:name="date" th:value="${checkDTO.localDate()}">
                     <input type="hidden" th:name="pc_id" th:value="${checkDTO.pc_id()}">
                     <th:block th:each="group : ${checkDTO.periodGroups()}">

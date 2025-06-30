@@ -5,6 +5,42 @@
 
 <mapper namespace="com.pcms.dataaccess.mapper.ReservationMapper">
 
+    <select id="findByDate" parameterType="string" resultType="com.pcms.dto.reservationList.ReservationListBuilder">
+        SELECT
+            pc.pc_id,
+            pc.name as pc_name,
+            pc.status,
+            reservation.date,
+            user.name,
+            period.period_number,
+            period.start_time,
+            period.end_time
+        FROM pc
+            LEFT JOIN reservation ON pc.pc_id = reservation.pc_id
+                AND reservation.date = #{date}
+                AND reservation.status &lt;&gt; 'cancelled'
+            LEFT JOIN period ON reservation.period_number = period.period_number
+            LEFT JOIN user ON reservation.user_id = user.user_id
+        WHERE
+            pc.status &lt;&gt;'take_out'
+            AND
+            pc.status &lt;&gt; 'maintenance'
+        ORDER BY pc.pc_id, period_number
+    </select>
+
+    <select id="findByIdAndDate" resultType="com.pcms.model.Reservation" parameterType="map">
+        SELECT
+            *
+        FROM reservation
+                 INNER JOIN pc ON reservation.pc_id = pc.pc_id
+        WHERE
+            reservation.pc_id = #{pc_id}
+          AND
+            date = #{date}
+          AND
+            pc.status &lt;&gt; 'take_out'
+    </select>
+
     <insert id="reserve" parameterType="java.util.List">
         INSERT INTO reservation (
         user_id,
