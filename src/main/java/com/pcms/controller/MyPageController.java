@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
@@ -76,5 +78,32 @@ public class MyPageController {
         }
     }
 
+    /**
+     * ユーザーの予約履歴ページを表示するリクエストを処理します。
+     * セッションからログインユーザーのメールアドレスを取得し、
+     * ユーザーの履歴を取得し、ビューに必要なデータを構築します。
+     *
+     * @param model ビューに必要な属性を追加するために使用されるSpringモデルオブジェクト
+     * @param session 現在ログインしているユーザーの電子メールを取得するために使用される HttpSession オブジェクト
+     */
+    @GetMapping("/history")
+    public String history(
+            Model model,
+            HttpSession session
+    ) {
+
+        String email = (String) session.getAttribute("LOGIN_EMAIL");
+        Map<String, String> statusClassMap = Map.of(
+                "承認待ち", "bg-warning",
+                "貸出中", "bg-primary",
+                "返却済み", "bg-success",
+                "キャンセル済み", "bg-secondary"
+        );
+
+        model.addAttribute("userHistory", userService.getUserHistory(email));
+        model.addAttribute("statusClassMap", statusClassMap);
+
+        return "protected/history";
+    }
 
 }

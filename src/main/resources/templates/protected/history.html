@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title layout:fragment="title">ノートPC貸出状況</title>
+    <style>
+        @media (max-width: 450px) {
+            .responsive-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .responsive-table-wrapper table {
+                min-width: 600px;
+            }
+
+            table td, table th {
+                font-size: 1.1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 1.1rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <main>
+            <div class="container mt-5">
+                <h1 class="text-center mb-4">予約履歴</h1>
+                <div class="responsive-table-wrapper">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>PC名</th>
+                            <th>予約日</th>
+                            <th>返却日</th>
+                            <th>ステータス</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="history, stat: ${userHistory}">
+                                <td th:text="${history.pcName()}"></td>
+                                <td th:text="${history.reservationDate()}"></td>
+                                <td th:text="${history.returnTimeStr()}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${statusClassMap[history.status()]}"
+                                          th:text="${history.status()}"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a th:href="@{/mypage}" class="btn btn-secondary">マイページに戻る</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

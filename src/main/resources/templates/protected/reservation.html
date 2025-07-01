@@ -68,6 +68,7 @@
                                            th:for="'period' + ${entry.key}"
                                            th:text="${entry.key} + '限'">1限</label>
                                 </div>
+                                <script th:src="@{/js/reservation.js}"></script>
                             <div id="timeSlots" class="mt-4"></div>
                         </div>
 
@@ -86,7 +87,6 @@
                     </form>
                 </div>
             </div>
-            <script th:src="@{/js/reservation.js}"></script>
         </main>
     </div>
 </body>

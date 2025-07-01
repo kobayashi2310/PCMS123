@@ -60,5 +60,26 @@
             )
         </foreach>
     </insert>
+
+    <select id="findUserHistory" resultType="com.pcms.dto.mypage.history.ReservationHistoryDto">
+        SELECT
+            p.name AS pcName,
+            r.date AS reservationDate,
+            ret.returned_time AS returnTime,
+            CASE
+                WHEN r.status = 'pending_approval' THEN '承認待ち'
+                WHEN r.status = 'approval' AND ret.returned_time IS NULL THEN '貸出中'
+                WHEN r.status = 'approval' AND ret.returned_time IS NOT NULL THEN '返却済み'
+                WHEN r.status = 'cancelled' THEN 'キャンセル済み'
+            END AS status
+        FROM
+            reservation AS r
+        JOIN pcmsdb.pc p ON p.pc_id = r.pc_id
+        LEFT JOIN returned AS ret ON r.reservation_id = ret.reservation_id
+        WHERE
+            r.user_id = #{user_id}
+        ORDER BY r.created_at DESC
+        LIMIT 10
+    </select>
     
 </mapper>

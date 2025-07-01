@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -29,18 +30,24 @@ public class ReservationController {
      * 予約データは取得後、モデルに追加して画面に表示します。
      *
      * @param pc_id 予約の詳細を表示するPCのID。デフォルトまたは汎用の予約リストを取得する場合はnullにすることができます
-     * @param date 予約の詳細を表示する日付。nullまたは今日以前の場合は、現在の日付が使用されます
+     * @param dateStr 予約の詳細を表示する日付。nullまたは今日以前、日付が不正の場合は、現在の日付が使用されます
      * @param model ビューのレンダリングに必要な属性を追加するために使用される Spring モデル オブジェクト
      * @return レンダリングするビュー テンプレートの名前。具体的には「protected/reservation」です
      */
     @RequestMapping
     public String showReservation(
             @RequestParam(value = "pc_id", required = false) String pc_id,
-            @RequestParam(value = "date", required = false) LocalDate date,
+            @RequestParam(value = "date", required = false) String dateStr,
             Model model
     ) {
 
-        if (date == null || date.isBefore(LocalDate.now())) {
+        LocalDate date;
+
+        try {
+            date = dateStr == null || dateStr.isBlank()
+                    ? LocalDate.now()
+                    : LocalDate.parse(dateStr);
+        } catch (DateTimeParseException e) {
             date = LocalDate.now();
         }
         

@@ -1,5 +1,6 @@
 package com.pcms.dataaccess.mapper;
 
+import com.pcms.dto.mypage.history.ReservationHistoryDto;
 import com.pcms.dto.reservationList.ReservationListBuilder;
 import com.pcms.model.Reservation;
 import org.apache.ibatis.annotations.Mapper;
@@ -34,5 +35,13 @@ public interface ReservationMapper {
      * @return 予約に成功した数
      */
     int reserve(@Param("reservations") List<Reservation> reservations);
+
+    /**
+     * 特定のユーザーの予約履歴を取得します
+     *
+     * @param user_id 予約履歴を取得するユーザーの識別子
+     * @return 指定されたユーザーの予約詳細を含む {@code ReservationHistoryDto} オブジェクトのリスト
+     */
+    List<ReservationHistoryDto> findUserHistory(@Param("user_id") int user_id);
 
 }
