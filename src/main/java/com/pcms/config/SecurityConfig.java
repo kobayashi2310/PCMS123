@@ -1,6 +1,7 @@
 package com.pcms.config;
 
 import com.pcms.handler.config.CustomAuthenticationFailureHandler;
+import com.pcms.service.CustomUserDetails;
 import com.pcms.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -43,8 +44,11 @@ public class SecurityConfig {
                         .passwordParameter("password")
                         .defaultSuccessUrl("/mypage", true)
                         .successHandler((req, res, auth) -> {
-                            String email = auth.getName();
+                            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+                            String email = userDetails.getUsername();
+                            String name = userDetails.getName();
                             req.getSession().setAttribute("LOGIN_EMAIL", email);
+                            req.getSession().setAttribute("LOGIN_NAME", name);
                             req.getSession().setAttribute("loginMessage", "ログインに成功しました");
                             res.sendRedirect("/mypage");
                         })

@@ -2,10 +2,13 @@ package com.pcms.service;
 
 import com.pcms.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 /**
  * {@link UserDetailsService} インターフェースのカスタム実装。
@@ -45,17 +48,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * {@link User} オブジェクトを、Spring Security が認証および認可の目的で使用する {@link UserDetails} オブジェクトに変換します。
+     * Spring Security で使用するために、{@link User} オブジェクトを {@link UserDetails} オブジェクトに変換します。
      *
-     * @param user {@link UserDetails} に変換するユーザー
-     * @return 提供されたユーザーから得られたSpring Security互換の情報を含む{@link UserDetails}オブジェクト
+     * @param user メールアドレス、パスワード、役割、名前などのユーザーデータを含む {@link User} オブジェクト
+     * @return ユーザーのメールアドレス、パスワード、役割、その他の必要な属性を持つ {@link UserDetails} オブジェクト
      */
     private UserDetails toUserDetails(User user) {
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole().name()) // EnumからROLEを生成
-                .build();
+        return new CustomUserDetails(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())),
+                user.getName()
+        );
     }
+
 }
 

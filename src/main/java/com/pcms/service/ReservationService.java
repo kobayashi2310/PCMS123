@@ -94,10 +94,28 @@ public class ReservationService {
             var reservationList = reservationMapper.findByIdAndDate(pc_id, date.toString());
 
             List<Period> periodList = periodRepository.findAll();
+            
             Map<Byte, Boolean> periodMap = new TreeMap<>();
-            for (Period period : periodList) {
-                periodMap.put(period.getPeriod_number(), true);
+
+            if (date.equals(LocalDate.now())) {
+                LocalTime currentTime = LocalTime.now();
+
+                for (Period period : periodList) {
+                    byte periodNumber = period.getPeriod_number();
+                    LocalTime endTimeForPeriod = startTime(periodNumber);
+
+                    boolean isAvailable = currentTime.isBefore(endTimeForPeriod);
+                    periodMap.put(periodNumber, isAvailable);
+                }
+            } else {
+
+                for (Period period : periodList) {
+                    byte periodNumber = period.getPeriod_number();
+                    periodMap.put(periodNumber, true);
+                }
+
             }
+
             reservationList.forEach(r -> periodMap.put(r.getPeriod_number(), false));
 
             var pcDTOList = pcMapper.findByReservation().stream()
